@@ -11,16 +11,8 @@ class UserCreationForm(forms.ModelForm):
     password2 = forms.CharField(
         label='Password confirmation', widget=forms.PasswordInput)
 
-    def _iter_children(self, k, v):
-        data = [(k.codename, '- ' * v['depth'] + k.get_codename_display()), ]
-        if v['children']:
-            for child_key, child in v['children'].items():
-                data += self._iter_children(child_key, child)
-        return data
-
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
-
 
     class Meta:
         model = User
@@ -50,13 +42,6 @@ class UserChangeForm(forms.ModelForm):
     """
     password = ReadOnlyPasswordHashField()
 
-    def _iter_children(self, k, v):
-        data = [(k.codename, '- ' * v['depth'] + k.get_codename_display()), ]
-        if v['children']:
-            for child_key, child in v['children'].items():
-                data += self._iter_children(child_key, child)
-        return data
-
     def __init__(self, *args, **kwargs):
         super(UserChangeForm, self).__init__(*args, **kwargs)
 
@@ -65,12 +50,3 @@ class UserChangeForm(forms.ModelForm):
         fields = (
             'email', 'password', 'first_name', 'last_name', 'is_staff',
         )
-
-    def clean_password(self):
-        # Regardless of what the user provides, return the initial value.
-        # This is done here, rather than on the field, because the
-        # field does not have access to the initial value
-        return self.initial['password']
-
-    def save(self, commit=True):
-        super().save(commit=commit)
