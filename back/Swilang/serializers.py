@@ -18,6 +18,7 @@ class TranslationDetailSerializer(serializers.ModelSerializer):
     word_text = serializers.CharField(source='word.word')
     language_short_text = serializers.CharField(source='language.language_short')
     language_text = serializers.CharField(source='language.language')
+    created_by = serializers.StringRelatedField(source='created_by.email')
 
     class Meta:
         model = Translation
@@ -30,6 +31,7 @@ class TranslationDetailSerializer(serializers.ModelSerializer):
             'language_short_text',
             'language',
             'is_confirmed',
+            'created_by',
             'created_at'
         )
 
@@ -37,6 +39,7 @@ class TranslationDetailSerializer(serializers.ModelSerializer):
 class TranslationCreateSerializer(serializers.ModelSerializer):
     word_text = serializers.CharField(source='word.word')
     language_text = serializers.CharField(source='language.language_short')
+    created_by = serializers.StringRelatedField(source='created_by.email')
 
     class Meta:
         model = Translation
@@ -48,6 +51,7 @@ class TranslationCreateSerializer(serializers.ModelSerializer):
             'language',
             'language_text',
             'is_confirmed',
+            'created_by',
             'created_at'
         )
 

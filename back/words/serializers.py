@@ -4,7 +4,8 @@ from .models import Word
 
 
 class WordSerializer(serializers.ModelSerializer):
+    added_by = serializers.StringRelatedField(source='added_by.email')
 
     class Meta:
         model = Word
-        fields = '__all__'
+        fields = ('id', 'word', 'is_confirmed', 'created_at', 'added_by')
