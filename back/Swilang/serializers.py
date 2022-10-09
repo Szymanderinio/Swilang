@@ -61,6 +61,12 @@ class ActionCreateSerializer(serializers.ModelSerializer):
 
 class ReportCreateSerializer(serializers.ModelSerializer):
 
+    def validate(self, data):
+        report_type = data.get('report_type', None)
+        if report_type == 2 and not data.get('comment', None):
+            raise serializers.ValidationError("You must add a comment!")
+        return data
+
     class Meta:
         model = Report
         fields = ('report_type', 'comment')

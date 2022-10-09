@@ -7,6 +7,7 @@ from Swilang.forms import TranslationForm
 class TranslationAdmin(admin.ModelAdmin):
     list_display = ('word', 'translated_word', 'language', 'is_confirmed', 'created_by', 'created_at')
     form = TranslationForm
+    readonly_fields = ('created_by', 'created_at')
 
     class Meta:
         model = Translation

@@ -13,6 +13,9 @@ class Translation(models.Model):
     def __str__(self):
         return '({}) {} --> {}'.format(self.language.language_short, self.word, self.translated_word)
 
+    class Meta:
+        unique_together = ('word', 'language')
+
 
 class Action(models.Model):
     SWIPE_LEFT = 0
