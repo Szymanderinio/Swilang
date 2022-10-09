@@ -20,6 +20,7 @@ from users.views import UserApiView, CreateUserView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('api.urls_api')),
     path('auth/', include('api.login')),
     path('auth/user/', UserApiView.as_view(), name='rest_user_details'),
     path('auth/create/', CreateUserView.as_view(), name='rest_user_create')
