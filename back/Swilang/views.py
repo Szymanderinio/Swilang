@@ -1,16 +1,17 @@
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import action
+from rest_framework.decorators import action as endpoint
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Translation
 from languages.models import Language
 from words.models import Word
+from .models import Translation
+from .helpers import create_swilang_action
 from .serializers import TranslationListSerializer, TranslationDetailSerializer, TranslationCreateSerializer, \
-    ActionCreateSerializer
+    ActionCreateSerializer, ReportCreateSerializer
 
 
 class TranslationViewSet(ModelViewSet):
@@ -28,7 +29,6 @@ class TranslationViewSet(ModelViewSet):
         if self.action == 'create':
             return TranslationCreateSerializer
         return TranslationDetailSerializer
-
 
     def create(self, request, *args, **kwargs):
         user = self.request.user
@@ -48,43 +48,19 @@ class TranslationViewSet(ModelViewSet):
         data = serializer(instance=new).data
         return Response(data=data, status=status.HTTP_201_CREATED)
 
-
-    @action(detail=True, methods=['POST'])
+    @endpoint(detail=True, methods=['POST'])
     def action(self, request, **kwargs):
-        object = self.get_object()
+        obj = self.get_object()
         user = self.request.user
-        serializer = ActionCreateSerializer(data=request.data)
+        data = create_swilang_action(request.data, user, obj)
+        return Response(data=data, status=status.HTTP_201_CREATED)
+
+    @endpoint(detail=True, methods=['POST'])
+    def report(self, request, **kwargs):
+        obj = self.get_object()
+        user = self.request.user
+        create_swilang_action(request.data, user, obj, 2)
+        serializer = ReportCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(user=user, translation=object)
+        serializer.save(user=user, translation=obj)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-
-    # def perform_create(self, serializer):
-    #     user = self.request.user # TODO created_by
-    #     data = serializer
-    #     print(data)
-    #
-    #     validated_data = serializer.validated_data
-    #     # word_text = data.get('word_text')
-    #     # language_text = data.get('language_text')
-    #     try:
-    #         print(data)
-    #         # print(word_text)
-    #         # print(language_text)
-    #         # word = Word.objects.get(word=word_text)
-    #         # language = Language.objects.get(language=language_text)
-    #         # validated_data['word'] = word.id
-    #         # validated_data['language'] = language.id
-    #
-    #     except ObjectDoesNotExist:
-    #         return Response(data={'error': 'Word or Language not found'}, status=status.HTTP_404_NOT_FOUND)
-    #     print(serializer)
-    #     serializer.save()
-
-
-
-# @action(detail=False, methods=['GET'])
-# def simple_list(self, request, **kwargs):
-#     qs = self.queryset
-#     serializer = WarehouseSimpleListSerializer(qs, many=True)
-#     return Response(serializer.data, status=status.HTTP_200_OK)
