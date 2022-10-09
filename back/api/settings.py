@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'Swilang.apps.SwilangConfig',
 
     'rest_framework.authtoken',
+    'api',
     'users',
     'languages',
     'words',
