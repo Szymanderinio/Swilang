@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'Swilang.apps.SwilangConfig',
 
     'rest_framework.authtoken',
+    'django_filters',
     'api',
     'users',
     'languages',
@@ -147,6 +148,10 @@ REST_FRAMEWORK = {
     'JSON_UNDERSCOREIZE': {
         'no_underscore_before_number': True,
     },
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend'
+    )
+
 }
 
 REST_AUTH_SERIALIZERS = {

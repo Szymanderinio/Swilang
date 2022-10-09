@@ -5,18 +5,23 @@ from rest_framework.decorators import action as endpoint
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 from languages.models import Language
 from words.models import Word
 from .models import Translation
 from .helpers import create_swilang_action
 from .serializers import TranslationListSerializer, TranslationDetailSerializer, TranslationCreateSerializer, \
-    ActionCreateSerializer, ReportCreateSerializer
+    ReportCreateSerializer
+from .filters import BaseTranslationFilter
 
 
 class TranslationViewSet(ModelViewSet):
     queryset = Translation.objects.all()
     permission_classes = (IsAuthenticated, )
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = BaseTranslationFilter
 
     def get_serializer_context(self):
         context = super(TranslationViewSet, self).get_serializer_context()
