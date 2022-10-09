@@ -31,6 +31,7 @@ class TranslationViewSet(ModelViewSet):
 
 
     def create(self, request, *args, **kwargs):
+        user = self.request.user
         serializer = self.get_serializer_class()
         data = request.data
         word_text = data.get('word_text', None)
@@ -43,7 +44,7 @@ class TranslationViewSet(ModelViewSet):
             language = Language.objects.get(language_short=language_text)
         except ObjectDoesNotExist:
             return Response(data={'error': 'Word / Language not found'}, status=status.HTTP_404_NOT_FOUND)
-        new = Translation.objects.create(word=word, language=language, translated_word=translated_word)
+        new = Translation.objects.create(word=word, language=language, translated_word=translated_word, created_by=user)
         data = serializer(instance=new).data
         return Response(data=data, status=status.HTTP_201_CREATED)
 
