@@ -11,7 +11,7 @@ class TranslationListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Translation
-        fields = ('word_text', 'translated_word', 'language_text')
+        fields = ('id', 'word_text', 'translated_word', 'language_text')
 
 
 class TranslationDetailSerializer(serializers.ModelSerializer):
