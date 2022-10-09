@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from Swilang.models import Translation, Action
+from Swilang.models import Translation, Action, Report
 from Swilang.forms import TranslationForm
 
 
@@ -22,5 +22,15 @@ class ActionAdmin(admin.ModelAdmin):
         fields = '__all__'
 
 
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ('translation', 'report_type', 'comment', 'user', 'created_at')
+    readonly_fields = ('translation', 'report_type', 'comment', 'user', 'created_at')
+
+    class Meta:
+        model = Report
+        fields = '__all__'
+
+
+admin.site.register(Report, ReportAdmin)
 admin.site.register(Action, ActionAdmin)
 admin.site.register(Translation, TranslationAdmin)

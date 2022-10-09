@@ -31,3 +31,21 @@ class Action(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+class Report(models.Model):
+    BAD_TRANSLATION = 0
+    OFFENSIVE_WORD = 1
+    OTHER = 2
+
+    REPORT_TYPE = (
+        (BAD_TRANSLATION, 'Bad Translation'),
+        (OFFENSIVE_WORD, 'Offensive Word'),
+        (OTHER, 'Other')
+    )
+
+    report_type = models.IntegerField(choices=REPORT_TYPE)
+    user = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
+    translation = models.ForeignKey('Swilang.Translation', on_delete=models.CASCADE)
+    comment = models.CharField(max_length=500, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
