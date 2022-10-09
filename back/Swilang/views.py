@@ -4,15 +4,23 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Translation
 from languages.models import Language
 from words.models import Word
-from .serializers import TranslationListSerializer, TranslationDetailSerializer, TranslationCreateSerializer
+from .serializers import TranslationListSerializer, TranslationDetailSerializer, TranslationCreateSerializer, \
+    ActionCreateSerializer
 
 
 class TranslationViewSet(ModelViewSet):
     queryset = Translation.objects.all()
+    permission_classes = (IsAuthenticated, )
+
+    def get_serializer_context(self):
+        context = super(TranslationViewSet, self).get_serializer_context()
+        context.update({"request": self.request})
+        return context
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -38,6 +46,16 @@ class TranslationViewSet(ModelViewSet):
         new = Translation.objects.create(word=word, language=language, translated_word=translated_word)
         data = serializer(instance=new).data
         return Response(data=data, status=status.HTTP_201_CREATED)
+
+
+    @action(detail=True, methods=['POST'])
+    def action(self, request, **kwargs):
+        object = self.get_object()
+        user = self.request.user
+        serializer = ActionCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=user, translation=object)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
     # def perform_create(self, serializer):

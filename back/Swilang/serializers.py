@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from languages.models import Language
 from words.models import Word
-from .models import Translation
+from .models import Translation, Action
 
 
 class TranslationListSerializer(serializers.ModelSerializer):
@@ -50,3 +50,10 @@ class TranslationCreateSerializer(serializers.ModelSerializer):
             'is_confirmed',
             'created_at'
         )
+
+
+class ActionCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Action
+        fields = ('action_type',)
