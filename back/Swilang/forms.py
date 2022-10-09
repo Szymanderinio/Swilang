@@ -3,6 +3,7 @@ from django import forms
 from words.models import Word
 from .models import Translation
 
+
 class TranslationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):

@@ -7,6 +7,7 @@ class Translation(models.Model):
     translated_word = models.CharField(max_length=50, unique=True, null=True, blank=True)
     language = models.ForeignKey('languages.Language', on_delete=models.CASCADE, null=True, blank=True)
     is_confirmed = models.BooleanField(default=False)
+    created_by = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
