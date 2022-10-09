@@ -11,3 +11,22 @@ class Translation(models.Model):
 
     def __str__(self):
         return '({}) {} --> {}'.format(self.language.language_short, self.word, self.translated_word)
+
+
+class Action(models.Model):
+    SWIPE_LEFT = 0
+    SWIPE_RIGHT = 1
+    REPORT = 2
+
+    ACTION_TYPE = (
+        (SWIPE_LEFT, 'Swipe Left'),
+        (SWIPE_RIGHT, 'Swipe Right'),
+        (REPORT, 'Report')
+    )
+
+    action_type = models.IntegerField(choices=ACTION_TYPE)
+    user = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
+    translation = models.ForeignKey('Swilang.Translation', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
