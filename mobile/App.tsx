@@ -1,20 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+
+import LoginScreen from './screens/LoginScreen';
+import SwipeScreen from './screens/SwipeScreen';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Swilang</Text>
-      <StatusBar style='auto' />
-    </View>
-  );
-}
+  const [isLogin, setIsLogin] = useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  if (isLogin) {
+    return <SwipeScreen />;
+  }
+
+  return <LoginScreen setIsLogin={setIsLogin} />;
+}
