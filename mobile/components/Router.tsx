@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native';
 
 import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 import SwipeScreen from '../screens/SwipeScreen';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
@@ -13,7 +14,7 @@ const Router = () => {
     case ROUTES.login:
       return <LoginScreen />;
     case ROUTES.register:
-      return <></>;
+      return <RegisterScreen />;
     case ROUTES.swipe:
       return (
         <AuthRoute>

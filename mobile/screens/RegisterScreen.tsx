@@ -1,14 +1,19 @@
-import { useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Button, TextInput } from 'react-native';
+import React, { useState } from 'react';
 
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  TextInput,
+  Button,
+} from 'react-native';
+import { apiRegister } from '../api/api';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
-import { apiLogin } from '../api/api';
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
   const changeRoute = useAppStore((state) => state.changeRoute);
-  const setApiToken = useAppStore((state) => state.setApiToken);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -19,7 +24,7 @@ const LoginScreen = () => {
     return null;
   }
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     setError('');
     if (email.length === 0 || password.length === 0) {
       setError('You have to fill all fields!');
@@ -27,9 +32,8 @@ const LoginScreen = () => {
     }
 
     try {
-      const response = await apiLogin({ email, password });
-      setApiToken(response.data.key);
-      changeRoute(ROUTES.swipe);
+      await apiRegister({ email, password });
+      changeRoute(ROUTES.login);
     } catch (e) {
       console.error(e);
       setError('Invalid email or/and password!');
@@ -59,12 +63,12 @@ const LoginScreen = () => {
           autoCorrect={false}
           secureTextEntry={true}
         />
-        <Button title='Login' onPress={handleLogin} />
+        <Button title='Register' onPress={handleRegister} />
       </View>
-      <Text style={styles.registerText}>New to Swilang?</Text>
+      <Text style={styles.registerText}>Already have an account?</Text>
       <Button
-        title='Click here to register'
-        onPress={() => changeRoute(ROUTES.register)}
+        title='Click here to login'
+        onPress={() => changeRoute(ROUTES.login)}
       />
       <StatusBar />
     </View>
@@ -105,4 +109,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;
