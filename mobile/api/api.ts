@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { Translation } from '../types/translations';
-import { TranslationAction } from '../types/swipes';
+import { ReportType, TranslationAction } from '../types/swipes';
 import { useAppStore } from '../stores/useAppStore';
 
 const API_URL = 'http://localhost:8000';
@@ -34,6 +34,43 @@ type ApiRegisterResponse = {
 export const apiRegister = (data: ApiRegisterRequest) =>
   apiServer.post<ApiRegisterResponse>('/auth/create/', data);
 
+// ====================
+// AUTHORIZED ENDPOINTS
+// ====================
+// GET /auth/user/
+export type ApiGetUserResponse = {
+  pk: number;
+  email: string | null;
+  isStaff: boolean;
+  firstName: string | null;
+  lastName: string | null;
+  dateOfBirth: string | null;
+  dateJoined: string;
+};
+export const apiGetUser = () =>
+  apiServer.get<ApiGetUserResponse>('/auth/user/', {
+    headers: {
+      Authorization: `Token ${useAppStore.getState().apiToken}`,
+    },
+  });
+
+// PATCH /auth/user/
+type ApiUpdateUserRequest = {
+  email?: string | null;
+  isStaff?: boolean | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  dateOfBirth?: string | null;
+  dateJoined?: string | null;
+};
+type ApiUpdateUserResponse = ApiGetUserResponse;
+export const apiUpdateUser = (data: ApiUpdateUserRequest) =>
+  apiServer.patch<ApiUpdateUserResponse>('/auth/user/', data, {
+    headers: {
+      Authorization: `Token ${useAppStore.getState().apiToken}`,
+    },
+  });
+
 // GET /translations/
 type ApiGetTranslationsRequest = {
   language?: string;
@@ -59,6 +96,24 @@ export const apiSendActionTranslations = (props: ApiSendActionRequest) =>
   apiServer.post<ApiSendActionResponse>(
     `/translations/${props.translationID}/action/`,
     { actionType: props.actionType },
+    {
+      headers: {
+        Authorization: `Token ${useAppStore.getState().apiToken}`,
+      },
+    }
+  );
+
+// POST /translations/<translationID>/report/
+type ApiSendReportRequest = {
+  reportType: typeof ReportType[keyof typeof ReportType];
+  translationID: number;
+  comment?: string;
+};
+type ApiSendReportResponse = never;
+export const apiSendReportTranslations = (props: ApiSendReportRequest) =>
+  apiServer.post<ApiSendReportResponse>(
+    `/translations/${props.translationID}/report/`,
+    { reportType: props.reportType, comment: props.comment },
     {
       headers: {
         Authorization: `Token ${useAppStore.getState().apiToken}`,

@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 
-import {
-  View,
-  Text,
-  StatusBar,
-  StyleSheet,
-  TextInput,
-  Button,
-} from 'react-native';
+import { View, Text, StatusBar, StyleSheet, Button } from 'react-native';
 import { apiRegister } from '../api/api';
+import BasicTextInput from '../components/BasicTextInput';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 
@@ -45,16 +39,14 @@ const RegisterScreen = () => {
       <View style={styles.form}>
         <Text style={styles.logo}>Swilang</Text>
         {error && <Text style={styles.errorText}>{error}</Text>}
-        <TextInput
+        <BasicTextInput
           autoCapitalize='none'
           autoCorrect={false}
-          style={styles.textInput}
           placeholder='E-mail'
           onChangeText={setEmail}
           defaultValue={email}
         />
-        <TextInput
-          style={styles.textInput}
+        <BasicTextInput
           placeholder='Password'
           onChangeText={setPassword}
           defaultValue={password}
@@ -91,13 +83,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 40,
     marginBottom: 20,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: 'lightgray',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 15,
   },
   errorText: {
     color: 'red',

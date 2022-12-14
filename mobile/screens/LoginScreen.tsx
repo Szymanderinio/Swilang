@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Button, TextInput } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
 
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
-import { apiLogin } from '../api/api';
+import { apiGetUser, apiLogin } from '../api/api';
+import BasicTextInput from '../components/BasicTextInput';
+import { Colors } from '../constants/colors';
 
 const LoginScreen = () => {
   const changeRoute = useAppStore((state) => state.changeRoute);
+  const setUserData = useAppStore((state) => state.setUserData);
   const setApiToken = useAppStore((state) => state.setApiToken);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,8 +30,10 @@ const LoginScreen = () => {
     }
 
     try {
-      const response = await apiLogin({ email, password });
-      setApiToken(response.data.key);
+      const responseLogin = await apiLogin({ email, password });
+      setApiToken(responseLogin.data.key);
+      const responseGetUser = await apiGetUser();
+      setUserData(responseGetUser.data);
       changeRoute(ROUTES.swipe);
     } catch (e) {
       console.error(e);
@@ -41,16 +46,14 @@ const LoginScreen = () => {
       <View style={styles.form}>
         <Text style={styles.logo}>Swilang</Text>
         {error && <Text style={styles.errorText}>{error}</Text>}
-        <TextInput
+        <BasicTextInput
           autoCapitalize='none'
           autoCorrect={false}
-          style={styles.textInput}
           placeholder='E-mail'
           onChangeText={setEmail}
           defaultValue={email}
         />
-        <TextInput
-          style={styles.textInput}
+        <BasicTextInput
           placeholder='Password'
           onChangeText={setPassword}
           defaultValue={password}
@@ -87,16 +90,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 40,
     marginBottom: 20,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: 'lightgray',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 15,
+    color: Colors.primaryColor,
+    fontWeight: 'bold',
   },
   errorText: {
-    color: 'red',
+    color: Colors.negativeColor,
     fontWeight: 'bold',
     marginBottom: 20,
   },

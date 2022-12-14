@@ -2,7 +2,9 @@ import { View, Text } from 'react-native';
 
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import ReportTranslationScreen from '../screens/ReportTranslationScreen';
 import SwipeScreen from '../screens/SwipeScreen';
+import UserProfileScreen from '../screens/UserProfileScreen';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import AuthRoute from './AuthRoute';
@@ -19,6 +21,18 @@ const Router = () => {
       return (
         <AuthRoute>
           <SwipeScreen />
+        </AuthRoute>
+      );
+    case ROUTES.reportTranslation:
+      return (
+        <AuthRoute>
+          <ReportTranslationScreen />
+        </AuthRoute>
+      );
+    case ROUTES.userProfile:
+      return (
+        <AuthRoute>
+          <UserProfileScreen />
         </AuthRoute>
       );
     default:
