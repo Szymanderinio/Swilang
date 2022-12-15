@@ -68,6 +68,7 @@ export default function SwipeScreen() {
             <SwipeCard
               text1={data?.wordText}
               text2={data?.translatedWord}
+              id={data?.id}
               setTranslationVisible={setTranslationVisible}
             />
           );
@@ -79,7 +80,7 @@ export default function SwipeScreen() {
           handleSwiped(index, TranslationAction.SWIPE_RIGHT)
         }
         onSwiped={(cardIndex) => {
-          setCurrentSwipeIndex(cardIndex + 1);
+          setCurrentSwipeIndex((cardIndex + 1) % swipes.length);
         }}
         infinite
         backgroundColor={'white'}
@@ -108,11 +109,13 @@ export default function SwipeScreen() {
         </TouchableWithoutFeedback>
       </View>
       <View style={styles.bottomBar}>
-        <BasicButton
-          title='+ Add'
-          style={styles.button}
-          onPress={() => console.log('add')}
-        />
+        {userData?.isStaff && (
+          <BasicButton
+            title='+ Add'
+            style={styles.button}
+            onPress={() => console.log('add')}
+          />
+        )}
         <BasicButton
           title='Report'
           type={ButtonType.report}

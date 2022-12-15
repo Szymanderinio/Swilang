@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, StatusBar, StyleSheet, Button } from 'react-native';
 import { apiRegister } from '../api/api';
 import BasicTextInput from '../components/BasicTextInput';
+import { Colors } from '../constants/colors';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 
@@ -70,7 +71,7 @@ const RegisterScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: Colors.primaryBackgroundColor,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -83,6 +84,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 40,
     marginBottom: 20,
+    color: Colors.primaryColor,
+    fontWeight: 'bold',
   },
   errorText: {
     color: 'red',
