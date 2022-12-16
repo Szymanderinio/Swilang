@@ -26,10 +26,13 @@ export default function UserProfileScreen() {
   }, [userData]);
 
   const saveUserProfile = async () => {
-    const updateUserResponse = await apiUpdateUser({ firstName, lastName });
-    console.log(updateUserResponse.data);
-    setUserData(updateUserResponse.data);
-    changeRoute(ROUTES.swipe);
+    try {
+      const updateUserResponse = await apiUpdateUser({ firstName, lastName });
+      setUserData(updateUserResponse.data);
+      changeRoute(ROUTES.swipe);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const logout = () => {

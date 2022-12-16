@@ -4,11 +4,12 @@ import { Translation } from '../types/translations';
 import { ReportType, TranslationAction } from '../types/swipes';
 import { useAppStore } from '../stores/useAppStore';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = 'https://szyman1337.pythonanywhere.com';
+// const API_URL = 'http://localhost:8000';
 
 const apiServer = axios.create({
   baseURL: API_URL,
-  timeout: 2000,
+  timeout: 10000,
 });
 
 // POST /auth/login/
