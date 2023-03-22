@@ -72,7 +72,7 @@ class TranslationViewSet(ModelViewSet):
 
 
 class ReportViewSet(ModelViewSet):
-    queryset = Report.objects.all()
+    queryset = Report.objects.filter(is_solved=False)
     permission_classes = (IsAuthenticated, )
     filter_backends = (DjangoFilterBackend,)
     serializer_class = ReportSerializer

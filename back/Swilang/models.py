@@ -50,5 +50,6 @@ class Report(models.Model):
     translation = models.ForeignKey('Swilang.Translation', on_delete=models.CASCADE)
     comment = models.CharField(max_length=500, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_solved = models.BooleanField(default=False)
 
 
