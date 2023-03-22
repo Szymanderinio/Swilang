@@ -10,10 +10,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from languages.models import Language
 from words.models import Word
-from .models import Translation
+from .models import Translation, Report
 from .helpers import create_swilang_action
 from .serializers import TranslationListSerializer, TranslationDetailSerializer, TranslationCreateSerializer, \
-    ReportCreateSerializer
+    ReportCreateSerializer, ReportSerializer
 from .filters import BaseTranslationFilter
 
 
@@ -69,3 +69,11 @@ class TranslationViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save(user=user, translation=obj)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ReportViewSet(ModelViewSet):
+    queryset = Report.objects.all()
+    permission_classes = (IsAuthenticated, )
+    filter_backends = (DjangoFilterBackend,)
+    serializer_class = ReportSerializer
+
