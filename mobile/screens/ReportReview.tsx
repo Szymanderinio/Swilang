@@ -17,6 +17,8 @@ export default function ReportReviewScreen() {
   const changeRoute = useAppStore((state) => state.changeRoute);
   const reportReviewData = useAppStore((state) => state.reportReviewData);
   const [translation, setTranslation] = useState<Translation | null>(null);
+  const [isLoadingResolve, setIsLoadingResolve] = useState<boolean>(false);
+  const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTranslation = async () => {
@@ -41,6 +43,7 @@ export default function ReportReviewScreen() {
     if (reportReviewData === null) {
       return;
     }
+    setIsLoadingResolve(true);
 
     try {
       const response = await apiPatchReport({
@@ -53,6 +56,8 @@ export default function ReportReviewScreen() {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoadingResolve(false);
     }
   };
 
@@ -60,6 +65,7 @@ export default function ReportReviewScreen() {
     if (reportReviewData === null) {
       return;
     }
+    setIsLoadingDelete(true);
 
     try {
       const response = await apiDeleteTranslation({
@@ -71,6 +77,8 @@ export default function ReportReviewScreen() {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoadingDelete(false);
     }
   };
 
@@ -101,12 +109,14 @@ export default function ReportReviewScreen() {
             type={ButtonType.accept}
             onPress={handleResolveReport}
             style={styles.buttonVertical}
+            isLoading={isLoadingResolve}
           />
           <BasicButton
             title='Delete translation'
             type={ButtonType.report}
             onPress={handleDeleteTranslation}
             style={styles.buttonVertical}
+            isLoading={isLoadingDelete}
           />
         </View>
         <View style={styles.buttons}>

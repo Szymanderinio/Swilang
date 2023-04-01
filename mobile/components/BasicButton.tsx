@@ -6,6 +6,7 @@ import {
   ViewStyle,
   TouchableWithoutFeedback,
   GestureResponderEvent,
+  ActivityIndicator,
 } from 'react-native';
 import { Colors } from '../constants/colors';
 
@@ -21,6 +22,7 @@ type Props = {
   type?: typeof ButtonType[keyof typeof ButtonType];
   style?: StyleProp<ViewStyle>;
   onPress?: (event: GestureResponderEvent) => void;
+  isLoading?: boolean;
 };
 
 export default function BasicButton({
@@ -28,6 +30,7 @@ export default function BasicButton({
   type = ButtonType.info,
   style: containerStyle,
   onPress,
+  isLoading = false,
 }: Props) {
   let buttonTypeStyles;
   let buttonTypeContainerStyles;
@@ -58,6 +61,7 @@ export default function BasicButton({
       <View
         style={[styles.container, buttonTypeContainerStyles, containerStyle]}
       >
+        {isLoading && <ActivityIndicator style={styles.loading} />}
         <Text style={[styles.text, buttonTypeStyles]}>{title}</Text>
       </View>
     </TouchableWithoutFeedback>
@@ -66,6 +70,8 @@ export default function BasicButton({
 
 const styles = StyleSheet.create({
   container: {
+    display: 'flex',
+    flexDirection: 'row',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 10,
@@ -102,5 +108,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.primaryColor,
     borderWidth: 2,
     backgroundColor: Colors.primaryBackgroundColor,
+  },
+  loading: {
+    marginRight: 10,
   },
 });

@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   GestureResponderEvent,
   Pressable,
@@ -34,7 +35,7 @@ const ReportItemList = ({ title, date, onPress }: ItemProps) => (
 export default function ReportListScreen() {
   const changeRoute = useAppStore((state) => state.changeRoute);
   const setReportReviewData = useAppStore((state) => state.setReportReviewData);
-  const [reports, setReports] = React.useState<Report[]>([]);
+  const [reports, setReports] = React.useState<Report[] | null>(null);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -53,6 +54,10 @@ export default function ReportListScreen() {
   }, []);
 
   const handleReportPress = (id: number) => {
+    if (reports === null) {
+      return;
+    }
+
     setReportReviewData(reports.find((report) => report.id === id) ?? null);
     changeRoute(ROUTES.reportReview);
   };
@@ -61,17 +66,23 @@ export default function ReportListScreen() {
     <View style={styles.container}>
       <View style={styles.box}>
         <Text style={styles.title}>Report list</Text>
-        <FlatList
-          data={reports}
-          renderItem={({ item }) => (
-            <ReportItemList
-              title={ReportTypeMap[item.reportType] || '-'}
-              date={new Date(item.createdAt).toLocaleString()}
-              onPress={() => handleReportPress(item.id)}
-            />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-        />
+        {reports === null ? (
+          <ActivityIndicator size='large' color={Colors.primaryColor} />
+        ) : (
+          <FlatList
+            data={reports}
+            renderItem={({ item }) => (
+              <ReportItemList
+                title={ReportTypeMap[item.reportType] || '-'}
+                date={new Date(item.createdAt).toLocaleString()}
+                onPress={() => handleReportPress(item.id)}
+              />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            ListEmptyComponent={<Text>No reports</Text>}
+          />
+        )}
+
         <View style={styles.buttons}>
           <BasicButton
             title='Back'
