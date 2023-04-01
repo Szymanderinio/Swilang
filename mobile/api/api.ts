@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Translation } from '../types/translations';
 import { ReportType, TranslationAction } from '../types/swipes';
 import { useAppStore } from '../stores/useAppStore';
+import { Report } from '../types/reports';
 
 const API_URL = 'https://szyman1337.pythonanywhere.com';
 // const API_URL = 'http://localhost:8000';
@@ -87,6 +88,30 @@ export const apiGetTranslations = (props?: ApiGetTranslationsRequest) =>
     }
   );
 
+// GET /translations/<translationID>
+type ApiGetTranslationDetailsRequest = {
+  translationID: number;
+};
+export const apiGetTranslationDetails = (
+  props: ApiGetTranslationDetailsRequest
+) =>
+  apiServer.get<Translation>(`/translations/${props.translationID}/`, {
+    headers: {
+      Authorization: `Token ${useAppStore.getState().apiToken}`,
+    },
+  });
+
+// DELETE /translations/<translationID>
+type ApiDeleteTranslationRequest = {
+  translationID: number;
+};
+export const apiDeleteTranslation = (props: ApiDeleteTranslationRequest) =>
+  apiServer.delete<Translation>(`/translations/${props.translationID}/`, {
+    headers: {
+      Authorization: `Token ${useAppStore.getState().apiToken}`,
+    },
+  });
+
 // POST /translations/<translationID>/action/
 type ApiSendActionRequest = {
   actionType: typeof TranslationAction[keyof typeof TranslationAction];
@@ -115,6 +140,32 @@ export const apiSendReportTranslations = (props: ApiSendReportRequest) =>
   apiServer.post<ApiSendReportResponse>(
     `/translations/${props.translationID}/report/`,
     { reportType: props.reportType, comment: props.comment },
+    {
+      headers: {
+        Authorization: `Token ${useAppStore.getState().apiToken}`,
+      },
+    }
+  );
+
+// GET /reports/
+type ApiGetReportsResponse = Report[];
+export const apiGetReports = () =>
+  apiServer.get<ApiGetReportsResponse>(`/reports/`, {
+    headers: {
+      Authorization: `Token ${useAppStore.getState().apiToken}`,
+    },
+  });
+
+// PATCH /reports/<reportID>/
+type ApiPatchReportRequest = {
+  report: Partial<Report>;
+  reportId: number;
+};
+type ApiPatchReportResponse = Report;
+export const apiPatchReport = (props: ApiPatchReportRequest) =>
+  apiServer.patch<ApiPatchReportResponse>(
+    `/reports/${props.reportId}/`,
+    props.report,
     {
       headers: {
         Authorization: `Token ${useAppStore.getState().apiToken}`,

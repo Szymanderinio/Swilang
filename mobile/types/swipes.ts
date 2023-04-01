@@ -9,3 +9,9 @@ export const ReportType = {
   OFFENSIVE_WORD: 1,
   OTHER: 2,
 } as const;
+
+export const ReportTypeMap = {
+  0: 'Bad translation',
+  1: 'Offensive word',
+  2: 'Other',
+} as const;

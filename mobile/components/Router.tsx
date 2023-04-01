@@ -8,6 +8,9 @@ import UserProfileScreen from '../screens/UserProfileScreen';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import AuthRoute from './AuthRoute';
+import AdminPanelScreen from '../screens/AdminPanelScreen';
+import ReportListScreen from '../screens/ReportList';
+import ReportReviewScreen from '../screens/ReportReview';
 
 const Router = () => {
   const currentRoute = useAppStore((state) => state.currentRoute);
@@ -33,6 +36,24 @@ const Router = () => {
       return (
         <AuthRoute>
           <UserProfileScreen />
+        </AuthRoute>
+      );
+    case ROUTES.adminPanel:
+      return (
+        <AuthRoute>
+          <AdminPanelScreen />
+        </AuthRoute>
+      );
+    case ROUTES.reportList:
+      return (
+        <AuthRoute>
+          <ReportListScreen />
+        </AuthRoute>
+      );
+    case ROUTES.reportReview:
+      return (
+        <AuthRoute>
+          <ReportReviewScreen />
         </AuthRoute>
       );
     default:

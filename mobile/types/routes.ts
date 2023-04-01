@@ -4,6 +4,9 @@ export const ROUTES = {
   swipe: 'swipe',
   reportTranslation: 'reportTranslation',
   userProfile: 'userProfile',
+  adminPanel: 'adminPanel',
+  reportList: 'reportList',
+  reportReview: 'reportReview',
 } as const;
 
 export type Route = typeof ROUTES[keyof typeof ROUTES];

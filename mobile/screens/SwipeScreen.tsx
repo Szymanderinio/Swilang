@@ -111,9 +111,9 @@ export default function SwipeScreen() {
       <View style={styles.bottomBar}>
         {userData?.isStaff && (
           <BasicButton
-            title='+ Add'
+            title='Admin Panel'
             style={styles.button}
-            onPress={() => console.log('add')}
+            onPress={() => changeRoute(ROUTES.adminPanel)}
           />
         )}
         <BasicButton
