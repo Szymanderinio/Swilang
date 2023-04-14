@@ -92,6 +92,8 @@ DATABASES = {
     'default': env.db('POSTGIS_DATABASE_URL', default='sqlite://./db.sqlite3'),
 }
 
+DEEPL_AUTH_KEY = env('DEEPL_AUTH_KEY', default='')
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
