@@ -61,7 +61,7 @@ class TranslationCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Translation already exists in this language with current word!")
         if 'translated_word' not in data and 'auto_translated' not in data:
             raise serializers.ValidationError("Add translation or use auto translate feature!")
-        word, created = Word.objects.get_or_create(word=word_text)
+        word, created = Word.objects.get_or_create(word=word_text, is_confirmed=True)
         language = Language.objects.get(language=language_text)
         data['word'] = word
         data['language'] = language
