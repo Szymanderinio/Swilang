@@ -34,8 +34,13 @@ class TranslationViewSet(ModelViewSet):
     def perform_create(self, serializer):
         user = self.request.user
         word = serializer.validated_data.get('word').word
-        langauge = serializer.validated_data.get('language').language_short
-        instance = serializer.save(created_by=user, translated_word=translate(word, langauge))
+        language = serializer.validated_data.get('language').language_short
+        auto_translated = serializer.validated_data.get('auto_translated', None)
+        translated_word = serializer.validated_data.get('translated_word', None)
+        if auto_translated:
+            instance = serializer.save(created_by=user, translated_word=translate(word, language))
+        else:
+            instance = serializer.save(created_by=user, translated_word=translated_word)
         return instance
 
     @endpoint(detail=True, methods=['POST'])
