@@ -7,11 +7,12 @@ import { ROUTES } from '../types/routes';
 import { Colors } from '../constants/colors';
 import BasicTextInput from '../components/BasicTextInput';
 import { apiUpdateUser } from '../api/api';
+import { asyncStorage } from '../stores/asyncStorage';
+import { API_TOKEN_KEY } from '../constants/auth';
 
 export default function UserProfileScreen() {
   const changeRoute = useAppStore((state) => state.changeRoute);
   const setUserData = useAppStore((state) => state.setUserData);
-  const setApiToken = useAppStore((state) => state.setApiToken);
   const userData = useAppStore((state) => state.userData);
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -36,7 +37,7 @@ export default function UserProfileScreen() {
   };
 
   const logout = () => {
-    setApiToken(null);
+    asyncStorage.storeData(null, API_TOKEN_KEY);
     changeRoute(ROUTES.login);
   };
 

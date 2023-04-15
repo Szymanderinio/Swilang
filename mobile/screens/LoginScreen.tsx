@@ -1,26 +1,48 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  ActivityIndicator,
+} from 'react-native';
 
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import { apiGetUser, apiLogin } from '../api/api';
 import BasicTextInput from '../components/BasicTextInput';
 import { Colors } from '../constants/colors';
+import { asyncStorage } from '../stores/asyncStorage';
+import { API_TOKEN_KEY } from '../constants/auth';
 
 const LoginScreen = () => {
   const changeRoute = useAppStore((state) => state.changeRoute);
   const setUserData = useAppStore((state) => state.setUserData);
-  const setApiToken = useAppStore((state) => state.setApiToken);
+  const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  if (useAppStore.getState().apiToken) {
-    changeRoute(ROUTES.swipe);
+  useEffect(() => {
+    const checkIfLoggedIn = async () => {
+      try {
+        const apiToken = await asyncStorage.getData(API_TOKEN_KEY);
 
-    return null;
-  }
+        if (apiToken) {
+          const responseGetUser = await apiGetUser();
+          setUserData(responseGetUser.data);
+          changeRoute(ROUTES.swipe);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkIfLoggedIn();
+  }, []);
 
   const handleLogin = async () => {
     setError('');
@@ -31,7 +53,7 @@ const LoginScreen = () => {
 
     try {
       const responseLogin = await apiLogin({ email, password });
-      setApiToken(responseLogin.data.key);
+      asyncStorage.storeData(responseLogin.data.key, API_TOKEN_KEY);
       const responseGetUser = await apiGetUser();
       setUserData(responseGetUser.data);
       changeRoute(ROUTES.swipe);
@@ -40,6 +62,14 @@ const LoginScreen = () => {
       setError('Invalid email or/and password!');
     }
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

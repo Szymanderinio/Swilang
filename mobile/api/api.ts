@@ -9,8 +9,8 @@ import {
   Word,
 } from '../types/translations';
 import { ReportType, TranslationAction } from '../types/swipes';
-import { useAppStore } from '../stores/useAppStore';
 import { Report } from '../types/reports';
+import { getApiToken } from '../utils/token';
 
 const API_URL = 'https://szyman1337.pythonanywhere.com';
 // const API_URL = 'http://localhost:8000';
@@ -28,7 +28,7 @@ type ApiLoginRequest = {
 type ApiLoginResponse = {
   key: string;
 };
-export const apiLogin = (data: ApiLoginRequest) =>
+export const apiLogin = async (data: ApiLoginRequest) =>
   apiServer.post<ApiLoginResponse>('/auth/login/', data);
 
 // POST /auth/create/
@@ -40,7 +40,7 @@ type ApiRegisterResponse = {
   pk: number;
   email: string;
 };
-export const apiRegister = (data: ApiRegisterRequest) =>
+export const apiRegister = async (data: ApiRegisterRequest) =>
   apiServer.post<ApiRegisterResponse>('/auth/create/', data);
 
 // ====================
@@ -56,10 +56,10 @@ export type ApiGetUserResponse = {
   dateOfBirth: string | null;
   dateJoined: string;
 };
-export const apiGetUser = () =>
+export const apiGetUser = async () =>
   apiServer.get<ApiGetUserResponse>('/auth/user/', {
     headers: {
-      Authorization: `Token ${useAppStore.getState().apiToken}`,
+      Authorization: `Token ${await getApiToken()}`,
     },
   });
 
@@ -73,10 +73,10 @@ type ApiUpdateUserRequest = {
   dateJoined?: string | null;
 };
 type ApiUpdateUserResponse = ApiGetUserResponse;
-export const apiUpdateUser = (data: ApiUpdateUserRequest) =>
+export const apiUpdateUser = async (data: ApiUpdateUserRequest) =>
   apiServer.patch<ApiUpdateUserResponse>('/auth/user/', data, {
     headers: {
-      Authorization: `Token ${useAppStore.getState().apiToken}`,
+      Authorization: `Token ${await getApiToken()}`,
     },
   });
 
@@ -85,24 +85,24 @@ type ApiGetTranslationsRequest = {
   language?: string;
 };
 type ApiGetTranslationsResponse = Translation[];
-export const apiGetTranslations = (props?: ApiGetTranslationsRequest) =>
+export const apiGetTranslations = async (props?: ApiGetTranslationsRequest) =>
   apiServer.get<ApiGetTranslationsResponse>(
     `/translations/${props?.language ? `?lng=${props.language}` : ''}`,
     {
       headers: {
-        Authorization: `Token ${useAppStore.getState().apiToken}`,
+        Authorization: `Token ${await getApiToken()}`,
       },
     }
   );
 
 // GET /translations/not_confirmed/
 type ApiGetNotConfirmedTranslationsResponse = NotConfirmedTranslation[];
-export const apiGetNotConfirmedTranslations = () =>
+export const apiGetNotConfirmedTranslations = async () =>
   apiServer.get<ApiGetNotConfirmedTranslationsResponse>(
     `translations/not_confirmed/`,
     {
       headers: {
-        Authorization: `Token ${useAppStore.getState().apiToken}`,
+        Authorization: `Token ${await getApiToken()}`,
       },
     }
   );
@@ -117,13 +117,13 @@ export type ApiPostTranslationRequest = {
   };
 };
 type ApiPostTranslationsResponse = TranslationFull;
-export const apiPostTranslation = (props: ApiPostTranslationRequest) =>
+export const apiPostTranslation = async (props: ApiPostTranslationRequest) =>
   apiServer.post<ApiPostTranslationsResponse>(
     `/translations/`,
     props.newTranslation,
     {
       headers: {
-        Authorization: `Token ${useAppStore.getState().apiToken}`,
+        Authorization: `Token ${await getApiToken()}`,
       },
     }
   );
@@ -134,13 +134,13 @@ export type ApiPatchTranslationRequest = {
   translationID: number;
 };
 type ApiPatchTranslationsResponse = TranslationDetails;
-export const apiPatchTranslation = (props: ApiPatchTranslationRequest) =>
+export const apiPatchTranslation = async (props: ApiPatchTranslationRequest) =>
   apiServer.patch<ApiPostTranslationsResponse>(
     `/translations/${props.translationID}/`,
     props.translationData,
     {
       headers: {
-        Authorization: `Token ${useAppStore.getState().apiToken}`,
+        Authorization: `Token ${await getApiToken()}`,
       },
     }
   );
@@ -149,12 +149,12 @@ export const apiPatchTranslation = (props: ApiPatchTranslationRequest) =>
 type ApiGetTranslationDetailsRequest = {
   translationID: number;
 };
-export const apiGetTranslationDetails = (
+export const apiGetTranslationDetails = async (
   props: ApiGetTranslationDetailsRequest
 ) =>
   apiServer.get<Translation>(`/translations/${props.translationID}/`, {
     headers: {
-      Authorization: `Token ${useAppStore.getState().apiToken}`,
+      Authorization: `Token ${await getApiToken()}`,
     },
   });
 
@@ -162,10 +162,12 @@ export const apiGetTranslationDetails = (
 type ApiDeleteTranslationRequest = {
   translationID: number;
 };
-export const apiDeleteTranslation = (props: ApiDeleteTranslationRequest) =>
+export const apiDeleteTranslation = async (
+  props: ApiDeleteTranslationRequest
+) =>
   apiServer.delete<Translation>(`/translations/${props.translationID}/`, {
     headers: {
-      Authorization: `Token ${useAppStore.getState().apiToken}`,
+      Authorization: `Token ${await getApiToken()}`,
     },
   });
 
@@ -175,13 +177,13 @@ type ApiSendActionRequest = {
   translationID: number;
 };
 type ApiSendActionResponse = never;
-export const apiSendActionTranslations = (props: ApiSendActionRequest) =>
+export const apiSendActionTranslations = async (props: ApiSendActionRequest) =>
   apiServer.post<ApiSendActionResponse>(
     `/translations/${props.translationID}/action/`,
     { actionType: props.actionType },
     {
       headers: {
-        Authorization: `Token ${useAppStore.getState().apiToken}`,
+        Authorization: `Token ${await getApiToken()}`,
       },
     }
   );
@@ -193,23 +195,23 @@ type ApiSendReportRequest = {
   comment?: string;
 };
 type ApiSendReportResponse = never;
-export const apiSendReportTranslations = (props: ApiSendReportRequest) =>
+export const apiSendReportTranslations = async (props: ApiSendReportRequest) =>
   apiServer.post<ApiSendReportResponse>(
     `/translations/${props.translationID}/report/`,
     { reportType: props.reportType, comment: props.comment },
     {
       headers: {
-        Authorization: `Token ${useAppStore.getState().apiToken}`,
+        Authorization: `Token ${await getApiToken()}`,
       },
     }
   );
 
 // GET /words/
 type ApiGetWordsResponse = Word[];
-export const apiGetWords = () =>
+export const apiGetWords = async () =>
   apiServer.get<ApiGetWordsResponse>(`/words/`, {
     headers: {
-      Authorization: `Token ${useAppStore.getState().apiToken}`,
+      Authorization: `Token ${await getApiToken()}`,
     },
   });
 
@@ -218,10 +220,10 @@ export type ApiPostWordRequest = {
   newWord: Omit<Word, 'id' | 'addedBy' | 'createdAt' | 'isConfirmed'>;
 };
 type ApiPostWordResponse = Word;
-export const apiPostWord = (props: ApiPostWordRequest) =>
+export const apiPostWord = async (props: ApiPostWordRequest) =>
   apiServer.post<ApiPostWordResponse>(`/words/`, props.newWord, {
     headers: {
-      Authorization: `Token ${useAppStore.getState().apiToken}`,
+      Authorization: `Token ${await getApiToken()}`,
     },
   });
 
@@ -231,23 +233,23 @@ export type ApiPatchWordRequest = {
   wordID: number;
 };
 type ApiPatchWordResponse = Word;
-export const apiPatchWord = (props: ApiPatchWordRequest) =>
+export const apiPatchWord = async (props: ApiPatchWordRequest) =>
   apiServer.patch<ApiPatchWordResponse>(
     `/words/${props.wordID}/`,
     props.wordData,
     {
       headers: {
-        Authorization: `Token ${useAppStore.getState().apiToken}`,
+        Authorization: `Token ${await getApiToken()}`,
       },
     }
   );
 
 // GET /reports/
 type ApiGetReportsResponse = Report[];
-export const apiGetReports = () =>
+export const apiGetReports = async () =>
   apiServer.get<ApiGetReportsResponse>(`/reports/`, {
     headers: {
-      Authorization: `Token ${useAppStore.getState().apiToken}`,
+      Authorization: `Token ${await getApiToken()}`,
     },
   });
 
@@ -257,22 +259,22 @@ type ApiPatchReportRequest = {
   reportId: number;
 };
 type ApiPatchReportResponse = Report;
-export const apiPatchReport = (props: ApiPatchReportRequest) =>
+export const apiPatchReport = async (props: ApiPatchReportRequest) =>
   apiServer.patch<ApiPatchReportResponse>(
     `/reports/${props.reportId}/`,
     props.report,
     {
       headers: {
-        Authorization: `Token ${useAppStore.getState().apiToken}`,
+        Authorization: `Token ${await getApiToken()}`,
       },
     }
   );
 
 // GET /languages/
 type ApiGetLanguagesResponse = Language[];
-export const apiGetLanguages = () =>
+export const apiGetLanguages = async () =>
   apiServer.get<ApiGetLanguagesResponse>(`/languages/`, {
     headers: {
-      Authorization: `Token ${useAppStore.getState().apiToken}`,
+      Authorization: `Token ${await getApiToken()}`,
     },
   });

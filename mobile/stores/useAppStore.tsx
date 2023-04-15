@@ -7,7 +7,6 @@ import { Report } from '../types/reports';
 
 type AppStoreVars = {
   currentRoute: Route;
-  apiToken: string | null;
   userData: ApiGetUserResponse | null;
   reportingTranslation: Translation | null;
   notConfirmedTranslation: NotConfirmedTranslation | null;
@@ -16,7 +15,6 @@ type AppStoreVars = {
 
 type AppStoreFuncs = {
   changeRoute: (route: Route) => void;
-  setApiToken: (newToken: string | null) => void;
   setUserData: (userData: ApiGetUserResponse | null) => void;
   setReportingTranslation: (reportingTranslation: Translation | null) => void;
   setReportReviewData: (reportReviewData: Report | null) => void;
@@ -31,7 +29,6 @@ const initialState: AppStoreVars = {
   currentRoute: ROUTES.login,
   reportingTranslation: null,
   userData: null,
-  apiToken: null,
   reportReviewData: null,
   notConfirmedTranslation: null,
 };
@@ -39,7 +36,6 @@ const initialState: AppStoreVars = {
 export const useAppStore = create<AppStore>()((set) => ({
   ...initialState,
   changeRoute: (route) => set({ currentRoute: route }),
-  setApiToken: (newApiToken) => set({ apiToken: newApiToken }),
   setUserData: (userData) => set({ userData }),
   setReportingTranslation: (reportingTranslation) =>
     set({ reportingTranslation }),

@@ -1,19 +1,30 @@
+import { useEffect } from 'react';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
+import { getApiToken } from '../utils/token';
 
 type Props = {
   children: JSX.Element;
 };
 
 const AuthRoute = ({ children }: Props) => {
-  const apiToken = useAppStore((state) => state.apiToken);
   const changeRoute = useAppStore((state) => state.changeRoute);
 
-  if (!apiToken) {
-    changeRoute(ROUTES.login);
+  useEffect(() => {
+    const checkIfLoggedIn = async () => {
+      try {
+        const apiToken = await getApiToken();
 
-    return null;
-  }
+        if (!apiToken) {
+          changeRoute(ROUTES.login);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkIfLoggedIn();
+  }, []);
 
   return children;
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { View, Text, StatusBar, StyleSheet, Button } from 'react-native';
 import { apiRegister } from '../api/api';
@@ -6,6 +6,7 @@ import BasicTextInput from '../components/BasicTextInput';
 import { Colors } from '../constants/colors';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
+import { getApiToken } from '../utils/token';
 
 const RegisterScreen = () => {
   const changeRoute = useAppStore((state) => state.changeRoute);
@@ -13,11 +14,21 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  if (useAppStore.getState().apiToken) {
-    changeRoute(ROUTES.swipe);
+  useEffect(() => {
+    const checkIfLoggedIn = async () => {
+      try {
+        const apiToken = await getApiToken();
 
-    return null;
-  }
+        if (apiToken) {
+          changeRoute(ROUTES.swipe);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkIfLoggedIn();
+  }, []);
 
   const handleRegister = async () => {
     setError('');
