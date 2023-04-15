@@ -44,7 +44,7 @@ class TranslationViewSet(ModelViewSet):
         auto_translated = serializer.validated_data.get('auto_translated', None)
         translated_word = serializer.validated_data.get('translated_word', None)
         if auto_translated:
-            instance = serializer.save(created_by=user, translated_word=translate(word, language), is_confirmed=True)
+            instance = serializer.save(created_by=user, translated_word=translate(word, language))
         else:
             instance = serializer.save(created_by=user, translated_word=translated_word)
         return instance
