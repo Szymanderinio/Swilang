@@ -37,23 +37,35 @@ class TranslationDetailSerializer(serializers.ModelSerializer):
 
 
 class TranslationCreateSerializer(serializers.ModelSerializer):
-    word_text = serializers.CharField(source='word.word')
-    language_text = serializers.CharField(source='language.language_short')
-    created_by = serializers.StringRelatedField(source='created_by.email')
+    word = serializers.CharField()
+    language = serializers.CharField()
 
     class Meta:
         model = Translation
         fields = (
             'id',
             'word',
-            'word_text',
             'translated_word',
             'language',
-            'language_text',
             'is_confirmed',
+            'auto_translated',
             'created_by',
             'created_at'
         )
+
+    def validate(self, data):
+        word_text = data['word']
+        language_text = data['language']
+        qs = Translation.objects.filter(word__word__icontains=word_text, language__language__icontains=language_text)
+        if qs.exists():
+            raise serializers.ValidationError("Translation already exists in this language with current word!")
+        if 'translated_word' not in data and 'auto_translated' not in data:
+            raise serializers.ValidationError("Add translation or use auto translate feature!")
+        word, created = Word.objects.get_or_create(word=word_text)
+        language = Language.objects.get(language=language_text)
+        data['word'] = word
+        data['language'] = language
+        return data
 
 
 class ActionCreateSerializer(serializers.ModelSerializer):
