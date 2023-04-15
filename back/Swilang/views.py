@@ -14,7 +14,6 @@ from .filters import BaseTranslationFilter
 
 
 class TranslationViewSet(ModelViewSet):
-    queryset = Translation.objects.all()
     permission_classes = (IsAuthenticated, )
     filter_backends = (DjangoFilterBackend,)
     filterset_class = BaseTranslationFilter
@@ -31,6 +30,13 @@ class TranslationViewSet(ModelViewSet):
             return TranslationCreateSerializer
         return TranslationDetailSerializer
 
+    def get_queryset(self):
+        if self.action == 'list':
+            return Translation.objects.filter(is_confirmed=True)
+        if self.action == 'not_confirmed':
+            return Translation.objects.filter(is_confirmed=False)
+        return Translation.objects.all()
+
     def perform_create(self, serializer):
         user = self.request.user
         word = serializer.validated_data.get('word').word
@@ -38,7 +44,7 @@ class TranslationViewSet(ModelViewSet):
         auto_translated = serializer.validated_data.get('auto_translated', None)
         translated_word = serializer.validated_data.get('translated_word', None)
         if auto_translated:
-            instance = serializer.save(created_by=user, translated_word=translate(word, language))
+            instance = serializer.save(created_by=user, translated_word=translate(word, language), is_confirmed=True)
         else:
             instance = serializer.save(created_by=user, translated_word=translated_word)
         return instance
@@ -60,6 +66,14 @@ class TranslationViewSet(ModelViewSet):
         serializer.save(user=user, translation=obj)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
+    @endpoint(detail=False, methods=['GET'])
+    def not_confirmed(self, request, **kwargs):
+        serializer = self.get_serializer_class()
+        qs = self.get_queryset()
+        serializer = serializer(data=qs, many=True)
+        serializer.is_valid()
+        data = serializer.data
+        return Response(data=data, status=status.HTTP_201_CREATED)
 
 class ReportViewSet(ModelViewSet):
     queryset = Report.objects.filter(is_solved=False)

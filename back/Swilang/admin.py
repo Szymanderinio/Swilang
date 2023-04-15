@@ -24,8 +24,8 @@ class ActionAdmin(admin.ModelAdmin):
 
 
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ('translation', 'report_type', 'comment', 'user', 'created_at')
-    readonly_fields = ('translation', 'report_type', 'comment', 'user', 'created_at')
+    list_display = ('translation', 'report_type', 'is_solved', 'comment', 'user', 'created_at')
+    readonly_fields = ('translation', 'report_type', 'is_solved', 'comment', 'user', 'created_at')
 
     class Meta:
         model = Report
