@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import {
   Language,
+  NotConfirmedTranslation,
   Translation,
   TranslationDetails,
   TranslationFull,
@@ -87,6 +88,18 @@ type ApiGetTranslationsResponse = Translation[];
 export const apiGetTranslations = (props?: ApiGetTranslationsRequest) =>
   apiServer.get<ApiGetTranslationsResponse>(
     `/translations/${props?.language ? `?lng=${props.language}` : ''}`,
+    {
+      headers: {
+        Authorization: `Token ${useAppStore.getState().apiToken}`,
+      },
+    }
+  );
+
+// GET /translations/not_confirmed/
+type ApiGetNotConfirmedTranslationsResponse = NotConfirmedTranslation[];
+export const apiGetNotConfirmedTranslations = () =>
+  apiServer.get<ApiGetNotConfirmedTranslationsResponse>(
+    `translations/not_confirmed/`,
     {
       headers: {
         Authorization: `Token ${useAppStore.getState().apiToken}`,

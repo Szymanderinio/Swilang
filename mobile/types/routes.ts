@@ -8,6 +8,8 @@ export const ROUTES = {
   reportList: 'reportList',
   reportReview: 'reportReview',
   addTranslation: 'addTranslation',
+  translationConfirmationList: 'translationConfirmationList',
+  translationConfirmationReview: 'translationConfirmationReview',
 } as const;
 
 export type Route = typeof ROUTES[keyof typeof ROUTES];

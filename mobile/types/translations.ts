@@ -16,6 +16,19 @@ export type TranslationFull = {
   createdAt: string;
 };
 
+export type NotConfirmedTranslation = {
+  id: number;
+  word: number;
+  wordText: string;
+  translatedWord: string;
+  languageText: string;
+  languageShortText: string;
+  language: number;
+  isConfirmed: boolean;
+  createdBy: string;
+  createdAt: string;
+};
+
 export type TranslationDetails = Translation & {
   word: number;
   languageShortText: string;

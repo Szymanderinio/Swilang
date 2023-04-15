@@ -25,6 +25,12 @@ export default function AdminPanelScreen() {
             onPress={() => changeRoute(ROUTES.addTranslation)}
             style={styles.button}
           />
+          <BasicButton
+            title='Not confirmed translations list'
+            type={ButtonType.info}
+            onPress={() => changeRoute(ROUTES.translationConfirmationList)}
+            style={styles.button}
+          />
         </View>
         <View style={styles.buttons}>
           <BasicButton
