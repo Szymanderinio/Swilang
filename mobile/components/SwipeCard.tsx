@@ -12,10 +12,10 @@ type Props = {
   text1: string;
   text2: string;
   id: number;
-  setTranslationVisible: (x: boolean) => void;
+  setVisibleTranslationsIds: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-const SwipeCard = ({ text1, text2, id, setTranslationVisible }: Props) => {
+const SwipeCard = ({ text1, text2, id, setVisibleTranslationsIds }: Props) => {
   const [showTranslation, setShowTranslation] = useState(false);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const SwipeCard = ({ text1, text2, id, setTranslationVisible }: Props) => {
     <TouchableWithoutFeedback
       onPress={() => {
         setShowTranslation(true);
-        setTranslationVisible(true);
+        setVisibleTranslationsIds((prev) => [...prev, id]);
       }}
     >
       <View style={styles.card}>

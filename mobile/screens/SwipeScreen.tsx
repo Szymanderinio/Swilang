@@ -6,6 +6,7 @@ import {
   Image,
   Text,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import { apiGetTranslations, apiSendActionTranslations } from '../api/api';
@@ -25,19 +26,25 @@ export default function SwipeScreen() {
     (state) => state.setReportingTranslation
   );
   const userData = useAppStore((state) => state.userData);
-  const [translationVisible, setTranslationVisible] = useState(false);
+  const [visibleTranslationIds, setVisibleTranslationsIds] = useState<number[]>(
+    []
+  );
   const [swipes, setSwipes] = useState<Translation[]>([]);
   const [currentSwipeIndex, setCurrentSwipeIndex] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchTranslations = async () => {
       try {
+        setIsLoading(true);
         const mainLanguage = await getMainLanguage();
         const payload = mainLanguage ? { language: mainLanguage } : {};
         const response = await apiGetTranslations(payload);
         setSwipes(response.data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -56,44 +63,52 @@ export default function SwipeScreen() {
     } catch (error) {
       console.error(error);
     }
-    setTranslationVisible(false);
+    setVisibleTranslationsIds((prev) => {
+      return prev.filter((id) => id !== swipes[cardIndex].id);
+    });
   };
 
   return (
     <View style={styles.container}>
-      <Swiper
-        cards={swipes}
-        containerStyle={styles.swiperContainer}
-        marginTop={40}
-        marginBottom={100}
-        renderCard={(data) => {
-          return (
-            <SwipeCard
-              text1={data?.wordText}
-              text2={data?.translatedWord}
-              id={data?.id}
-              setTranslationVisible={setTranslationVisible}
-            />
-          );
-        }}
-        onSwipedLeft={(index) =>
-          handleSwiped(index, TranslationAction.SWIPE_LEFT)
-        }
-        onSwipedRight={(index) =>
-          handleSwiped(index, TranslationAction.SWIPE_RIGHT)
-        }
-        onSwiped={(cardIndex) => {
-          setCurrentSwipeIndex((cardIndex + 1) % swipes.length);
-        }}
-        infinite
-        backgroundColor={'white'}
-        showSecondCard
-        stackSize={2}
-        disableBottomSwipe
-        disableTopSwipe
-        disableRightSwipe={!translationVisible}
-        disableLeftSwipe={!translationVisible}
-      />
+      {!isLoading ? (
+        <Swiper
+          cards={swipes}
+          containerStyle={styles.swiperContainer}
+          marginTop={40}
+          marginBottom={100}
+          renderCard={(data) => {
+            return (
+              <SwipeCard
+                text1={data?.wordText}
+                text2={data?.translatedWord}
+                id={data?.id}
+                setVisibleTranslationsIds={setVisibleTranslationsIds}
+              />
+            );
+          }}
+          onSwipedLeft={(index) =>
+            handleSwiped(index, TranslationAction.SWIPE_LEFT)
+          }
+          onSwipedRight={(index) =>
+            handleSwiped(index, TranslationAction.SWIPE_RIGHT)
+          }
+          onSwiped={(cardIndex) => {
+            setCurrentSwipeIndex((cardIndex + 1) % swipes.length);
+          }}
+          infinite
+          backgroundColor={'white'}
+          showSecondCard
+          stackSize={2}
+          disableBottomSwipe
+          disableTopSwipe
+          disableRightSwipe={
+            !visibleTranslationIds.includes(swipes[currentSwipeIndex]?.id)
+          }
+          disableLeftSwipe={
+            !visibleTranslationIds.includes(swipes[currentSwipeIndex]?.id)
+          }
+        />
+      ) : null}
       <View style={styles.topBar}>
         <Text style={{ flex: 3, height: 30 }}>
           <Text style={styles.welcomeText}>Hi, </Text>
@@ -111,6 +126,11 @@ export default function SwipeScreen() {
           />
         </TouchableWithoutFeedback>
       </View>
+      {isLoading ? (
+        <View style={styles.swiperContainer}>
+          <ActivityIndicator />
+        </View>
+      ) : null}
       <View style={styles.bottomBar}>
         {userData?.isStaff && (
           <BasicButton
@@ -136,6 +156,10 @@ export default function SwipeScreen() {
 }
 
 const styles = StyleSheet.create({
+  fullScreen: {
+    marginTop: 150,
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
