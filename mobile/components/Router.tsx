@@ -14,6 +14,7 @@ import ReportReviewScreen from '../screens/ReportReview';
 import AddTranslationScreen from '../screens/AddTranslationScreen';
 import TranslationConfirmationListScreen from '../screens/TranslationConfirmationListScreen';
 import TranslationConfirmationReviewScreen from '../screens/TranslationsConfirmationReviewScreen';
+import EditTranslationScreen from '../screens/EditTranslationScreen';
 
 const Router = () => {
   const currentRoute = useAppStore((state) => state.currentRoute);
@@ -75,6 +76,12 @@ const Router = () => {
       return (
         <AuthRoute>
           <TranslationConfirmationReviewScreen />
+        </AuthRoute>
+      );
+    case ROUTES.editTranslation:
+      return (
+        <AuthRoute>
+          <EditTranslationScreen />
         </AuthRoute>
       );
     default:

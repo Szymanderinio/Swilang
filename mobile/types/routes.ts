@@ -10,6 +10,7 @@ export const ROUTES = {
   addTranslation: 'addTranslation',
   translationConfirmationList: 'translationConfirmationList',
   translationConfirmationReview: 'translationConfirmationReview',
+  editTranslation: 'editTranslation',
 } as const;
 
 export type Route = typeof ROUTES[keyof typeof ROUTES];

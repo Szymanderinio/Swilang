@@ -6,7 +6,7 @@ import { ROUTES } from '../types/routes';
 import { Colors } from '../constants/colors';
 import { useAppStore } from '../stores/useAppStore';
 import { ReportTypeMap } from '../types/swipes';
-import { Translation } from '../types/translations';
+import { TranslationDetails } from '../types/translations';
 import {
   apiDeleteTranslation,
   apiGetTranslationDetails,
@@ -15,8 +15,13 @@ import {
 
 export default function ReportReviewScreen() {
   const changeRoute = useAppStore((state) => state.changeRoute);
+  const setEditTranslationData = useAppStore(
+    (state) => state.setEditTranslationData
+  );
   const reportReviewData = useAppStore((state) => state.reportReviewData);
-  const [translation, setTranslation] = useState<Translation | null>(null);
+  const [translation, setTranslation] = useState<TranslationDetails | null>(
+    null
+  );
   const [isLoadingResolve, setIsLoadingResolve] = useState<boolean>(false);
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false);
 
@@ -82,6 +87,18 @@ export default function ReportReviewScreen() {
     }
   };
 
+  const handleEditTranslation = () => {
+    if (!reportReviewData?.translation) {
+      return;
+    }
+
+    setEditTranslationData({
+      translationId: reportReviewData?.translation,
+      returnScreen: ROUTES.reportReview,
+    });
+    changeRoute(ROUTES.editTranslation);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.box}>
@@ -110,6 +127,12 @@ export default function ReportReviewScreen() {
             onPress={handleResolveReport}
             style={styles.buttonVertical}
             isLoading={isLoadingResolve}
+          />
+          <BasicButton
+            title='Edit translation'
+            type={ButtonType.info}
+            onPress={handleEditTranslation}
+            style={styles.buttonVertical}
           />
           <BasicButton
             title='Delete translation'

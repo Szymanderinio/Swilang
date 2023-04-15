@@ -9,12 +9,16 @@ import { apiPatchTranslation } from '../api/api';
 import { apiDeleteTranslation } from '../api/api';
 
 export default function TranslationConfirmationReviewScreen() {
-  const [isLoadingAccept, setIsLoadingAccept] = useState(false);
-  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const changeRoute = useAppStore((state) => state.changeRoute);
+  const setEditTranslationData = useAppStore(
+    (state) => state.setEditTranslationData
+  );
   const notConfirmedTranslation = useAppStore(
     (state) => state.notConfirmedTranslation
   );
+
+  const [isLoadingAccept, setIsLoadingAccept] = useState(false);
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
 
   const handleAcceptTranslation = async () => {
     if (notConfirmedTranslation === null) {
@@ -63,6 +67,18 @@ export default function TranslationConfirmationReviewScreen() {
     }
   };
 
+  const handleEditTranslation = () => {
+    if (!notConfirmedTranslation?.id) {
+      return;
+    }
+
+    setEditTranslationData({
+      translationId: notConfirmedTranslation.id,
+      returnScreen: ROUTES.translationConfirmationList,
+    });
+    changeRoute(ROUTES.editTranslation);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.box}>
@@ -90,6 +106,12 @@ export default function TranslationConfirmationReviewScreen() {
             onPress={handleAcceptTranslation}
             style={styles.buttonVertical}
             isLoading={isLoadingAccept}
+          />
+          <BasicButton
+            title='Edit translation'
+            type={ButtonType.info}
+            onPress={handleEditTranslation}
+            style={styles.buttonVertical}
           />
           <BasicButton
             title='Remove translation'

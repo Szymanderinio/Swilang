@@ -157,7 +157,7 @@ type ApiGetTranslationDetailsRequest = {
 export const apiGetTranslationDetails = async (
   props: ApiGetTranslationDetailsRequest
 ) =>
-  apiServer.get<Translation>(`/translations/${props.translationID}/`, {
+  apiServer.get<TranslationDetails>(`/translations/${props.translationID}/`, {
     headers: {
       Authorization: `Token ${await getApiToken()}`,
     },
