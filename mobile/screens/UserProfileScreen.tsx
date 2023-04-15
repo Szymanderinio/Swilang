@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import BasicButton, { ButtonType } from '../components/BasicButton';
@@ -6,9 +6,12 @@ import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import { Colors } from '../constants/colors';
 import BasicTextInput from '../components/BasicTextInput';
-import { apiUpdateUser } from '../api/api';
+import { apiGetLanguages, apiUpdateUser } from '../api/api';
 import { asyncStorage } from '../stores/asyncStorage';
-import { API_TOKEN_KEY } from '../constants/auth';
+import { API_TOKEN_KEY } from '../constants/storageKeys';
+import { Language } from '../types/translations';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { getMainLanguage, setMainLanguage } from '../utils/storage';
 
 export default function UserProfileScreen() {
   const changeRoute = useAppStore((state) => state.changeRoute);
@@ -16,6 +19,31 @@ export default function UserProfileScreen() {
   const userData = useAppStore((state) => state.userData);
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
+  const [languages, setLanguages] = useState<Language[]>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [openLanguageDropdown, setOpenLanguageDropdown] = useState(false);
+
+  useEffect(() => {
+    const getLanguages = async () => {
+      try {
+        const mainLanguage = await getMainLanguage();
+        setSelectedLanguage(mainLanguage);
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        const response = await apiGetLanguages();
+        if (response.status === 200) {
+          setLanguages(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getLanguages();
+  }, []);
 
   useEffect(() => {
     if (userData?.firstName) {
@@ -30,6 +58,12 @@ export default function UserProfileScreen() {
     try {
       const updateUserResponse = await apiUpdateUser({ firstName, lastName });
       setUserData(updateUserResponse.data);
+
+      const mainLanguage = await getMainLanguage();
+      if (selectedLanguage && selectedLanguage !== mainLanguage) {
+        await setMainLanguage(selectedLanguage);
+      }
+
       changeRoute(ROUTES.swipe);
     } catch (error) {
       console.error(error);
@@ -59,6 +93,21 @@ export default function UserProfileScreen() {
             placeholder='Last name'
             onChangeText={setLastName}
             defaultValue={lastName}
+          />
+        </View>
+        <View style={Platform.OS !== 'android' ? { zIndex: 1 } : null}>
+          <DropDownPicker
+            items={languages.map(({ language, languageShort }) => ({
+              label: language,
+              value: languageShort,
+            }))}
+            multiple={false}
+            value={selectedLanguage}
+            setValue={setSelectedLanguage}
+            setOpen={setOpenLanguageDropdown}
+            open={openLanguageDropdown}
+            style={styles.dropdown}
+            placeholder='Select language'
           />
         </View>
         <View style={styles.buttons}>
@@ -112,5 +161,10 @@ const styles = StyleSheet.create({
   },
   button: {
     marginHorizontal: 10,
+  },
+  dropdown: {
+    padding: 10,
+    marginBottom: 15,
+    zIndex: 1000,
   },
 });

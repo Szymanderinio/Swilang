@@ -17,6 +17,7 @@ import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import { TranslationAction } from '../types/swipes';
 import { Translation } from '../types/translations';
+import { getMainLanguage } from '../utils/storage';
 
 export default function SwipeScreen() {
   const changeRoute = useAppStore((state) => state.changeRoute);
@@ -31,7 +32,9 @@ export default function SwipeScreen() {
   useEffect(() => {
     const fetchTranslations = async () => {
       try {
-        const response = await apiGetTranslations();
+        const mainLanguage = await getMainLanguage();
+        const payload = mainLanguage ? { language: mainLanguage } : {};
+        const response = await apiGetTranslations(payload);
         setSwipes(response.data);
       } catch (error) {
         console.error(error);

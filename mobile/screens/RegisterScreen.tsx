@@ -1,18 +1,56 @@
 import React, { useEffect, useState } from 'react';
 
-import { View, Text, StatusBar, StyleSheet, Button } from 'react-native';
-import { apiRegister } from '../api/api';
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  Button,
+  Platform,
+} from 'react-native';
+import { apiGetLanguages, apiRegister } from '../api/api';
 import BasicTextInput from '../components/BasicTextInput';
 import { Colors } from '../constants/colors';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
-import { getApiToken } from '../utils/token';
+import {
+  getApiToken,
+  getMainLanguage,
+  setMainLanguage,
+} from '../utils/storage';
+import { Language } from '../types/translations';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const RegisterScreen = () => {
   const changeRoute = useAppStore((state) => state.changeRoute);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [languages, setLanguages] = useState<Language[]>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [openLanguageDropdown, setOpenLanguageDropdown] = useState(false);
+
+  useEffect(() => {
+    const getLanguages = async () => {
+      try {
+        const mainLanguage = await getMainLanguage();
+        setSelectedLanguage(mainLanguage);
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        const response = await apiGetLanguages();
+        if (response.status === 200) {
+          setLanguages(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getLanguages();
+  }, []);
 
   useEffect(() => {
     const checkIfLoggedIn = async () => {
@@ -32,13 +70,18 @@ const RegisterScreen = () => {
 
   const handleRegister = async () => {
     setError('');
-    if (email.length === 0 || password.length === 0) {
+    if (email.length === 0 || password.length === 0 || !selectedLanguage) {
       setError('You have to fill all fields!');
       return;
     }
 
     try {
       await apiRegister({ email, password });
+
+      if (selectedLanguage) {
+        await setMainLanguage(selectedLanguage);
+      }
+
       changeRoute(ROUTES.login);
     } catch (e) {
       console.error(e);
@@ -67,6 +110,22 @@ const RegisterScreen = () => {
           autoCorrect={false}
           secureTextEntry={true}
         />
+
+        <View style={Platform.OS !== 'android' ? { zIndex: 1 } : null}>
+          <DropDownPicker
+            items={languages.map(({ language, languageShort }) => ({
+              label: language,
+              value: languageShort,
+            }))}
+            multiple={false}
+            value={selectedLanguage}
+            setValue={setSelectedLanguage}
+            setOpen={setOpenLanguageDropdown}
+            open={openLanguageDropdown}
+            style={styles.dropdown}
+            placeholder='Select language'
+          />
+        </View>
         <Button title='Register' onPress={handleRegister} />
       </View>
       <Text style={styles.registerText}>Already have an account?</Text>
@@ -105,6 +164,11 @@ const styles = StyleSheet.create({
   },
   registerText: {
     textAlign: 'center',
+  },
+  dropdown: {
+    padding: 10,
+    marginBottom: 15,
+    zIndex: 1000,
   },
 });
 

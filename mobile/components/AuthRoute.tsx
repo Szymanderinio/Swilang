@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
-import { getApiToken } from '../utils/token';
+import { getApiToken } from '../utils/storage';
 
 type Props = {
   children: JSX.Element;

@@ -14,7 +14,7 @@ import { apiGetUser, apiLogin } from '../api/api';
 import BasicTextInput from '../components/BasicTextInput';
 import { Colors } from '../constants/colors';
 import { asyncStorage } from '../stores/asyncStorage';
-import { API_TOKEN_KEY } from '../constants/auth';
+import { API_TOKEN_KEY } from '../constants/storageKeys';
 
 const LoginScreen = () => {
   const changeRoute = useAppStore((state) => state.changeRoute);

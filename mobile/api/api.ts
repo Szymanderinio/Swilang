@@ -10,7 +10,7 @@ import {
 } from '../types/translations';
 import { ReportType, TranslationAction } from '../types/swipes';
 import { Report } from '../types/reports';
-import { getApiToken } from '../utils/token';
+import { getApiToken } from '../utils/storage';
 
 const API_URL = 'https://szyman1337.pythonanywhere.com';
 // const API_URL = 'http://localhost:8000';
@@ -42,6 +42,11 @@ type ApiRegisterResponse = {
 };
 export const apiRegister = async (data: ApiRegisterRequest) =>
   apiServer.post<ApiRegisterResponse>('/auth/create/', data);
+
+// GET /languages/
+type ApiGetLanguagesResponse = Language[];
+export const apiGetLanguages = async () =>
+  apiServer.get<ApiGetLanguagesResponse>(`/languages/`);
 
 // ====================
 // AUTHORIZED ENDPOINTS
@@ -269,12 +274,3 @@ export const apiPatchReport = async (props: ApiPatchReportRequest) =>
       },
     }
   );
-
-// GET /languages/
-type ApiGetLanguagesResponse = Language[];
-export const apiGetLanguages = async () =>
-  apiServer.get<ApiGetLanguagesResponse>(`/languages/`, {
-    headers: {
-      Authorization: `Token ${await getApiToken()}`,
-    },
-  });
