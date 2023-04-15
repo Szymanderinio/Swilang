@@ -1,5 +1,4 @@
-from abc import ABCMeta
-
+from django.db.models import Count
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 
@@ -7,6 +6,9 @@ from rest_framework import exceptions, serializers
 from rest_framework.authentication import authenticate
 
 from users.models import User
+
+from words.models import Word
+from Swilang.models import Translation, Action
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -62,10 +64,31 @@ class LoginSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    words_added = serializers.SerializerMethodField()
+    translations_added = serializers.SerializerMethodField()
+    swipes_left = serializers.SerializerMethodField()
+    swipes_right = serializers.SerializerMethodField()
+    reports = serializers.SerializerMethodField()
+
+    def get_words_added(self, obj):
+        return Word.objects.filter(added_by=obj, is_confirmed=True).count()
+
+    def get_translations_added(self, obj):
+        return Translation.objects.filter(created_by=obj, is_confirmed=True).count()
+
+    def get_swipes_left(self, obj):
+        return Action.objects.filter(user=obj, action_type=Action.SWIPE_LEFT).count()
+
+    def get_swipes_right(self, obj):
+        return Action.objects.filter(user=obj, action_type=Action.SWIPE_RIGHT).count()
+
+    def get_reports(self, obj):
+        return Action.objects.filter(user=obj, action_type=Action.REPORT).count()
 
     class Meta:
         model = User
-        fields = ('pk', 'email', 'is_staff', 'first_name', 'last_name', 'date_of_birth', 'date_joined')
+        fields = ('pk', 'email', 'is_staff', 'first_name', 'last_name', 'date_of_birth', 'date_joined', 'words_added',
+                  'translations_added', 'swipes_left', 'swipes_right', 'reports')
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
