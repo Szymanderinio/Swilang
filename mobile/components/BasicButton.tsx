@@ -23,6 +23,7 @@ type Props = {
   style?: StyleProp<ViewStyle>;
   onPress?: (event: GestureResponderEvent) => void;
   isLoading?: boolean;
+  disabled?: boolean;
 };
 
 export default function BasicButton({
@@ -31,6 +32,7 @@ export default function BasicButton({
   style: containerStyle,
   onPress,
   isLoading = false,
+  disabled = false,
 }: Props) {
   let buttonTypeStyles;
   let buttonTypeContainerStyles;
@@ -57,9 +59,14 @@ export default function BasicButton({
   }
 
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <TouchableWithoutFeedback onPress={!disabled ? onPress : () => {}}>
       <View
-        style={[styles.container, buttonTypeContainerStyles, containerStyle]}
+        style={[
+          styles.container,
+          buttonTypeContainerStyles,
+          containerStyle,
+          { opacity: disabled ? 0.5 : 1 },
+        ]}
       >
         {isLoading && <ActivityIndicator style={styles.loading} />}
         <Text style={[styles.text, buttonTypeStyles]}>{title}</Text>

@@ -36,6 +36,7 @@ export type TranslationDetails = Translation & {
   isConfirmed: boolean;
   createdBy: string;
   createdAt: string;
+  autoTranslated: boolean;
 };
 
 export type Word = {

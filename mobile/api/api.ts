@@ -135,7 +135,7 @@ export type ApiPatchTranslationRequest = {
 };
 type ApiPatchTranslationsResponse = TranslationDetails;
 export const apiPatchTranslation = async (props: ApiPatchTranslationRequest) =>
-  apiServer.patch<ApiPostTranslationsResponse>(
+  apiServer.patch<ApiPatchTranslationsResponse>(
     `/translations/${props.translationID}/`,
     props.translationData,
     {
