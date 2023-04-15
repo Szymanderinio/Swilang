@@ -15,8 +15,14 @@ export default function AdminPanelScreen() {
         <View>
           <BasicButton
             title='Report list'
-            type={ButtonType.secondary}
+            type={ButtonType.info}
             onPress={() => changeRoute(ROUTES.reportList)}
+            style={styles.button}
+          />
+          <BasicButton
+            title='Add translation'
+            type={ButtonType.info}
+            onPress={() => changeRoute(ROUTES.addTranslation)}
             style={styles.button}
           />
         </View>
@@ -58,6 +64,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginHorizontal: 10,
+    marginBottom: 10,
   },
   reportItem: {
     borderBottomColor: Colors.primaryColor,

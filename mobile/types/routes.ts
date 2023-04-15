@@ -7,6 +7,7 @@ export const ROUTES = {
   adminPanel: 'adminPanel',
   reportList: 'reportList',
   reportReview: 'reportReview',
+  addTranslation: 'addTranslation',
 } as const;
 
 export type Route = typeof ROUTES[keyof typeof ROUTES];

@@ -11,6 +11,7 @@ import AuthRoute from './AuthRoute';
 import AdminPanelScreen from '../screens/AdminPanelScreen';
 import ReportListScreen from '../screens/ReportList';
 import ReportReviewScreen from '../screens/ReportReview';
+import AddTranslationScreen from '../screens/AddTranslationScreen';
 
 const Router = () => {
   const currentRoute = useAppStore((state) => state.currentRoute);
@@ -54,6 +55,12 @@ const Router = () => {
       return (
         <AuthRoute>
           <ReportReviewScreen />
+        </AuthRoute>
+      );
+    case ROUTES.addTranslation:
+      return (
+        <AuthRoute>
+          <AddTranslationScreen />
         </AuthRoute>
       );
     default:

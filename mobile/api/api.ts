@@ -1,6 +1,12 @@
 import axios from 'axios';
 
-import { Translation } from '../types/translations';
+import {
+  Language,
+  Translation,
+  TranslationDetails,
+  TranslationFull,
+  Word,
+} from '../types/translations';
 import { ReportType, TranslationAction } from '../types/swipes';
 import { useAppStore } from '../stores/useAppStore';
 import { Report } from '../types/reports';
@@ -88,6 +94,44 @@ export const apiGetTranslations = (props?: ApiGetTranslationsRequest) =>
     }
   );
 
+// POST /translations/
+export type ApiPostTranslationRequest = {
+  newTranslation: {
+    word: string;
+    language: string;
+    autoTranslated: boolean;
+    translatedWord?: string;
+  };
+};
+type ApiPostTranslationsResponse = TranslationFull;
+export const apiPostTranslation = (props: ApiPostTranslationRequest) =>
+  apiServer.post<ApiPostTranslationsResponse>(
+    `/translations/`,
+    props.newTranslation,
+    {
+      headers: {
+        Authorization: `Token ${useAppStore.getState().apiToken}`,
+      },
+    }
+  );
+
+// PATCH /translations/
+export type ApiPatchTranslationRequest = {
+  translationData: Omit<Partial<TranslationDetails>, 'id'>;
+  translationID: number;
+};
+type ApiPatchTranslationsResponse = TranslationDetails;
+export const apiPatchTranslation = (props: ApiPatchTranslationRequest) =>
+  apiServer.patch<ApiPostTranslationsResponse>(
+    `/translations/${props.translationID}/`,
+    props.translationData,
+    {
+      headers: {
+        Authorization: `Token ${useAppStore.getState().apiToken}`,
+      },
+    }
+  );
+
 // GET /translations/<translationID>
 type ApiGetTranslationDetailsRequest = {
   translationID: number;
@@ -147,6 +191,44 @@ export const apiSendReportTranslations = (props: ApiSendReportRequest) =>
     }
   );
 
+// GET /words/
+type ApiGetWordsResponse = Word[];
+export const apiGetWords = () =>
+  apiServer.get<ApiGetWordsResponse>(`/words/`, {
+    headers: {
+      Authorization: `Token ${useAppStore.getState().apiToken}`,
+    },
+  });
+
+// POST /words/
+export type ApiPostWordRequest = {
+  newWord: Omit<Word, 'id' | 'addedBy' | 'createdAt' | 'isConfirmed'>;
+};
+type ApiPostWordResponse = Word;
+export const apiPostWord = (props: ApiPostWordRequest) =>
+  apiServer.post<ApiPostWordResponse>(`/words/`, props.newWord, {
+    headers: {
+      Authorization: `Token ${useAppStore.getState().apiToken}`,
+    },
+  });
+
+// PATCH /words/
+export type ApiPatchWordRequest = {
+  wordData: Omit<Partial<Word>, 'id' | 'addedBy' | 'createdAt'>;
+  wordID: number;
+};
+type ApiPatchWordResponse = Word;
+export const apiPatchWord = (props: ApiPatchWordRequest) =>
+  apiServer.patch<ApiPatchWordResponse>(
+    `/words/${props.wordID}/`,
+    props.wordData,
+    {
+      headers: {
+        Authorization: `Token ${useAppStore.getState().apiToken}`,
+      },
+    }
+  );
+
 // GET /reports/
 type ApiGetReportsResponse = Report[];
 export const apiGetReports = () =>
@@ -172,3 +254,12 @@ export const apiPatchReport = (props: ApiPatchReportRequest) =>
       },
     }
   );
+
+// GET /languages/
+type ApiGetLanguagesResponse = Language[];
+export const apiGetLanguages = () =>
+  apiServer.get<ApiGetLanguagesResponse>(`/languages/`, {
+    headers: {
+      Authorization: `Token ${useAppStore.getState().apiToken}`,
+    },
+  });
