@@ -9,6 +9,7 @@ from users.models import User
 
 from words.models import Word
 from Swilang.models import Translation, Action
+from languages.models import Language
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -98,10 +99,11 @@ class CreateUserSerializer(serializers.ModelSerializer):
         user = get_user_model().objects.create_user(
             email=validated_data['email'],
             password=validated_data['password'],
+            current_language=validated_data['current_language'],
             is_active=True,
         )
         return user
 
     class Meta:
         model = User
-        fields = ('pk', 'email', 'password')
+        fields = ('pk', 'email', 'password', 'current_language')

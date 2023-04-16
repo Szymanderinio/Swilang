@@ -9,7 +9,7 @@ from users.forms import UserCreationForm, UserChangeForm
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
-    list_display = ('email', 'is_staff', 'last_login')
+    list_display = ('email', 'is_staff', 'current_language', 'last_login')
     list_filter = ('is_staff', 'is_superuser')
 
     fieldsets = (
