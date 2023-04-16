@@ -1,4 +1,5 @@
 from .serializers import ActionCreateSerializer
+from .models import Action
 from django.conf import settings
 import deepl
 
@@ -26,3 +27,18 @@ def translate(word, target_lang):
     ).text
 
     return translated_word
+
+
+def get_knowledge_level(translation, user):
+    actions = Action.objects.filter(user=user)
+    swipe_right = actions.filter(action_type=Action.SWIPE_RIGHT, translation=translation).count()
+    swipe_left = actions.filter(action_type=Action.SWIPE_LEFT, translation=translation).count()
+
+    if swipe_right + swipe_left == 0:
+        # no actions yet
+        return 1
+    else:
+        # calculate knowledge score based on user actions
+        freq = swipe_right / (swipe_left or 1.0)
+        freq = int(freq)
+        return min(max(freq, 1), 3)
