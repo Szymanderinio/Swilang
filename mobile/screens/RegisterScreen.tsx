@@ -15,9 +15,9 @@ import { Colors } from '../constants/colors';
 import { ROUTES } from '../types/routes';
 import { getApiToken } from '../utils/storage';
 import { Language } from '../types/translations';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { RootStackParamList } from '../navigators/RootNavigator';
 import { useAppStore } from '../stores/useAppStore';
+import Dropdown from '../components/Dropdown';
 
 type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.register>;
 
@@ -115,22 +115,18 @@ const RegisterScreen = ({ navigation }: Props) => {
           autoCorrect={false}
           secureTextEntry={true}
         />
-
-        <View style={Platform.OS !== 'android' ? { zIndex: 1 } : null}>
-          <DropDownPicker
-            items={languages.map(({ language, id }) => ({
-              label: language,
-              value: id,
-            }))}
-            multiple={false}
-            value={selectedLanguage}
-            setValue={setSelectedLanguage}
-            setOpen={setOpenLanguageDropdown}
-            open={openLanguageDropdown}
-            style={styles.dropdown}
-            placeholder='Select language'
-          />
-        </View>
+        <Dropdown
+          items={languages.map(({ language, id }) => ({
+            label: language,
+            value: id,
+          }))}
+          multiple={false}
+          value={selectedLanguage}
+          setValue={setSelectedLanguage}
+          setOpen={setOpenLanguageDropdown}
+          open={openLanguageDropdown}
+          placeholder='Select language'
+        />
         <Button title='Register' onPress={handleRegister} />
       </View>
       <Text style={styles.registerText}>Already have an account?</Text>
@@ -169,11 +165,6 @@ const styles = StyleSheet.create({
   },
   registerText: {
     textAlign: 'center',
-  },
-  dropdown: {
-    padding: 10,
-    marginBottom: 15,
-    zIndex: 1000,
   },
 });
 

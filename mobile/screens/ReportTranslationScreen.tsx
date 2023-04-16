@@ -1,6 +1,5 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import React, { useState } from 'react';
-import DropDownPicker from 'react-native-dropdown-picker';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Colors } from '../constants/colors';
@@ -10,6 +9,7 @@ import { ROUTES } from '../types/routes';
 import { apiSendReportTranslations } from '../api/api';
 import { ReportType } from '../types/swipes';
 import { RootStackParamList } from '../navigators/RootNavigator';
+import Dropdown from '../components/Dropdown';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -77,7 +77,7 @@ export default function ReportTranslationScreen({ navigation }: Props) {
           </Text>
         </Text>
         <Text style={styles.reasonInfo}>Reason:</Text>
-        <DropDownPicker
+        <Dropdown
           open={open}
           setOpen={setOpen}
           items={dropdownOptions}

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import BasicButton, { ButtonType } from '../components/BasicButton';
@@ -15,6 +14,7 @@ import {
 } from '../api/api';
 import { Language } from '../types/translations';
 import { RootStackParamList } from '../navigators/RootNavigator';
+import Dropdown from '../components/Dropdown';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -119,21 +119,18 @@ export default function AddTranslationScreen({ navigation }: Props) {
             onChangeText={setWord}
             defaultValue={word}
           />
-          <View style={Platform.OS !== 'android' ? { zIndex: 1 } : null}>
-            <DropDownPicker
-              items={languages.map(({ language }) => ({
-                label: language,
-                value: language,
-              }))}
-              multiple={false}
-              value={selectedLanguage}
-              setValue={setSelectedLanguage}
-              setOpen={setOpenLanguageDropdown}
-              open={openLanguageDropdown}
-              style={styles.dropdown}
-              placeholder='Select language'
-            />
-          </View>
+          <Dropdown
+            items={languages.map(({ language }) => ({
+              label: language,
+              value: language,
+            }))}
+            multiple={false}
+            value={selectedLanguage}
+            setValue={setSelectedLanguage}
+            setOpen={setOpenLanguageDropdown}
+            open={openLanguageDropdown}
+            placeholder='Select language'
+          />
           <BasicButton
             title={'Auto translate'}
             style={styles.button}
@@ -201,11 +198,6 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 10,
     marginBottom: 10,
-  },
-  dropdown: {
-    padding: 10,
-    marginBottom: 15,
-    zIndex: 1000,
   },
   section: {
     flexDirection: 'row',

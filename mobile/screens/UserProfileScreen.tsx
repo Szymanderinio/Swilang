@@ -13,9 +13,9 @@ import {
   apiUpdateUser,
 } from '../api/api';
 import { Language } from '../types/translations';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { removeApiToken } from '../utils/storage';
 import { RootStackParamList } from '../navigators/RootNavigator';
+import Dropdown from '../components/Dropdown';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -107,21 +107,18 @@ export default function UserProfileScreen({ navigation }: Props) {
             defaultValue={lastName}
           />
         </View>
-        <View style={Platform.OS !== 'android' ? { zIndex: 1 } : null}>
-          <DropDownPicker
-            items={languages.map(({ language, languageShort }) => ({
-              label: language,
-              value: languageShort,
-            }))}
-            multiple={false}
-            value={selectedLanguage}
-            setValue={setSelectedLanguage}
-            setOpen={setOpenLanguageDropdown}
-            open={openLanguageDropdown}
-            style={styles.dropdown}
-            placeholder='Select language'
-          />
-        </View>
+        <Dropdown
+          items={languages.map(({ language, languageShort }) => ({
+            label: language,
+            value: languageShort,
+          }))}
+          multiple={false}
+          value={selectedLanguage}
+          setValue={setSelectedLanguage}
+          setOpen={setOpenLanguageDropdown}
+          open={openLanguageDropdown}
+          placeholder='Select language'
+        />
         <View style={styles.buttons}>
           <BasicButton
             title='Logout'
@@ -173,10 +170,5 @@ const styles = StyleSheet.create({
   },
   button: {
     marginHorizontal: 10,
-  },
-  dropdown: {
-    padding: 10,
-    marginBottom: 15,
-    zIndex: 1000,
   },
 });

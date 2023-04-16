@@ -7,6 +7,7 @@ export const Colors = {
 
   primaryTextColor: '#112',
   secondaryTextColor: '#FFF',
+  placeholderTextColor: '#777',
 
   positiveColor: '#52C44C',
   negativeColor: '#BC5C5C',
