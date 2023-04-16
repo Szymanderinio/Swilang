@@ -4,7 +4,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { ROUTES } from '../types/routes';
 import { Colors } from '../constants/colors';
-import { RootStackParamList } from '../components/Router';
+import { RootStackParamList } from '../navigators/RootNavigator';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,

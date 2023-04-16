@@ -14,7 +14,7 @@ import { ROUTES } from '../types/routes';
 import { apiGetLanguages, apiGetUser, apiLogin } from '../api/api';
 import BasicTextInput from '../components/BasicTextInput';
 import { Colors } from '../constants/colors';
-import { RootStackParamList } from '../components/Router';
+import { RootStackParamList } from '../navigators/RootNavigator';
 import { getApiToken, setApiToken } from '../utils/storage';
 
 type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.login>;

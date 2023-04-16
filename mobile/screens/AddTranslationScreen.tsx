@@ -13,8 +13,8 @@ import {
   apiPostAutoTranslate,
   apiPostTranslation,
 } from '../api/api';
-import { Language, TranslationFull } from '../types/translations';
-import { RootStackParamList } from '../components/Router';
+import { Language } from '../types/translations';
+import { RootStackParamList } from '../navigators/RootNavigator';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,

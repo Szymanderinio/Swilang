@@ -17,7 +17,7 @@ import { apiGetNotConfirmedTranslations } from '../api/api';
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
-import { RootStackParamList } from '../components/Router';
+import { RootStackParamList } from '../navigators/RootNavigator';
 
 type ItemProps = {
   word: string;

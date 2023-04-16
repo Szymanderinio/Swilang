@@ -21,7 +21,7 @@ export type RootStackParamList = Record<Route, undefined>;
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
-const Router = () => {
+export default function RootNavigator() {
   const isLoggedIn = useAppStore((state) => state.isLoggedIn);
   const setLoggedIn = useAppStore((state) => state.setLoggedIn);
 
@@ -93,6 +93,4 @@ const Router = () => {
       )}
     </RootStack.Navigator>
   );
-};
-
-export default Router;
+}

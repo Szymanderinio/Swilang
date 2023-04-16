@@ -9,7 +9,7 @@ import BasicButton, { ButtonType } from '../components/BasicButton';
 import { ROUTES } from '../types/routes';
 import { apiSendReportTranslations } from '../api/api';
 import { ReportType } from '../types/swipes';
-import { RootStackParamList } from '../components/Router';
+import { RootStackParamList } from '../navigators/RootNavigator';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,

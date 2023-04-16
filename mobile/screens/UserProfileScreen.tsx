@@ -15,7 +15,7 @@ import {
 import { Language } from '../types/translations';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { removeApiToken } from '../utils/storage';
-import { RootStackParamList } from '../components/Router';
+import { RootStackParamList } from '../navigators/RootNavigator';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,

@@ -18,7 +18,7 @@ import { apiGetReports } from '../api/api';
 import { Report } from '../types/reports';
 import { useAppStore } from '../stores/useAppStore';
 import { ReportTypeMap } from '../types/swipes';
-import { RootStackParamList } from '../components/Router';
+import { RootStackParamList } from '../navigators/RootNavigator';
 
 type ItemProps = {
   title: string;

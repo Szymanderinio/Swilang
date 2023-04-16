@@ -20,7 +20,7 @@ import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import { TranslationAction } from '../types/swipes';
 import { Translation } from '../types/translations';
-import { RootStackParamList } from '../components/Router';
+import { RootStackParamList } from '../navigators/RootNavigator';
 
 type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.swipe>;
 

@@ -13,7 +13,7 @@ import {
   apiGetTranslationDetails,
   apiPatchReport,
 } from '../api/api';
-import { RootStackParamList } from '../components/Router';
+import { RootStackParamList } from '../navigators/RootNavigator';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,

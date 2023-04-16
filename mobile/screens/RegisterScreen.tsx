@@ -16,7 +16,7 @@ import { ROUTES } from '../types/routes';
 import { getApiToken } from '../utils/storage';
 import { Language } from '../types/translations';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { RootStackParamList } from '../components/Router';
+import { RootStackParamList } from '../navigators/RootNavigator';
 import { useAppStore } from '../stores/useAppStore';
 
 type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.register>;
