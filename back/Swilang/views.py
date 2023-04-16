@@ -75,6 +75,18 @@ class TranslationViewSet(ModelViewSet):
         data = serializer.data
         return Response(data=data, status=status.HTTP_201_CREATED)
 
+    @endpoint(detail=False, methods=['POST'])
+    def auto_translate(self, request, **kwargs):
+        word = self.request.data.get('word')
+        language_short = self.request.data.get('language_short')
+        if not word or not language_short:
+            return Response(data={'error': 'No word or languageShort given!'})
+        translated_word = translate(word, language_short)
+        data = {'value': translated_word}
+        return Response(data=data)
+
+
+
 class ReportViewSet(ModelViewSet):
     queryset = Report.objects.filter(is_solved=False)
     permission_classes = (IsAuthenticated, )
