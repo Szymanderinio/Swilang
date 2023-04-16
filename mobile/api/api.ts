@@ -35,6 +35,7 @@ export const apiLogin = async (data: ApiLoginRequest) =>
 type ApiRegisterRequest = {
   email: string;
   password: string;
+  current_language: number;
 };
 type ApiRegisterResponse = {
   pk: number;
@@ -60,6 +61,12 @@ export type ApiGetUserResponse = {
   lastName: string | null;
   dateOfBirth: string | null;
   dateJoined: string;
+  currentLanguage: number | null; // language id
+  wordsAdded: number;
+  translationsAdded: number;
+  swipesLeft: number;
+  swipesRight: number;
+  reports: number;
 };
 export const apiGetUser = async ({ token }: { token?: string }) =>
   apiServer.get<ApiGetUserResponse>('/auth/user/', {
@@ -69,13 +76,14 @@ export const apiGetUser = async ({ token }: { token?: string }) =>
   });
 
 // PATCH /auth/user/
-type ApiUpdateUserRequest = {
+export type ApiUpdateUserRequest = {
   email?: string | null;
   isStaff?: boolean | null;
   firstName?: string | null;
   lastName?: string | null;
   dateOfBirth?: string | null;
   dateJoined?: string | null;
+  currentLanguage?: number | null;
 };
 type ApiUpdateUserResponse = ApiGetUserResponse;
 export const apiUpdateUser = async (data: ApiUpdateUserRequest) =>

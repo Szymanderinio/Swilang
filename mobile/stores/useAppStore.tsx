@@ -17,6 +17,7 @@ type AppStoreVars = {
   notConfirmedTranslation: NotConfirmedTranslation | null;
   reportReviewData: Report | null;
   editTranslationData: EditTranslationData | null;
+  mainLanguage: string | null;
 };
 
 type AppStoreFuncs = {
@@ -30,6 +31,7 @@ type AppStoreFuncs = {
     editTranslationData: EditTranslationData | null
   ) => void;
   setLoggedIn: (isLoggedIn: boolean) => void;
+  setMainLanguage: (mainLanguage: string | null) => void;
 };
 
 type AppStore = AppStoreVars & AppStoreFuncs;
@@ -41,6 +43,7 @@ const initialState: AppStoreVars = {
   notConfirmedTranslation: null,
   editTranslationData: null,
   isLoggedIn: false,
+  mainLanguage: null,
 };
 
 export const useAppStore = create<AppStore>()((set) => ({
@@ -53,4 +56,5 @@ export const useAppStore = create<AppStore>()((set) => ({
     set({ notConfirmedTranslation }),
   setEditTranslationData: (editTranslationData) => set({ editTranslationData }),
   setLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
+  setMainLanguage: (mainLanguage) => set({ mainLanguage }),
 }));

@@ -13,34 +13,26 @@ import { apiGetLanguages, apiRegister } from '../api/api';
 import BasicTextInput from '../components/BasicTextInput';
 import { Colors } from '../constants/colors';
 import { ROUTES } from '../types/routes';
-import {
-  getApiToken,
-  getMainLanguage,
-  setMainLanguage,
-} from '../utils/storage';
+import { getApiToken } from '../utils/storage';
 import { Language } from '../types/translations';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { RootStackParamList } from '../components/Router';
+import { useAppStore } from '../stores/useAppStore';
 
 type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.register>;
 
 const RegisterScreen = ({ navigation }: Props) => {
+  const setMainLanguage = useAppStore((state) => state.setMainLanguage);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [languages, setLanguages] = useState<Language[]>([]);
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<number | null>(null);
   const [openLanguageDropdown, setOpenLanguageDropdown] = useState(false);
 
   useEffect(() => {
     const getLanguages = async () => {
-      try {
-        const mainLanguage = await getMainLanguage();
-        setSelectedLanguage(mainLanguage);
-      } catch (error) {
-        console.log(error);
-      }
-
       try {
         const response = await apiGetLanguages();
         if (response.status === 200) {
@@ -72,16 +64,27 @@ const RegisterScreen = ({ navigation }: Props) => {
 
   const handleRegister = async () => {
     setError('');
-    if (email.length === 0 || password.length === 0 || !selectedLanguage) {
+    if (
+      email.length === 0 ||
+      password.length === 0 ||
+      selectedLanguage === null
+    ) {
       setError('You have to fill all fields!');
       return;
     }
 
     try {
-      await apiRegister({ email, password });
+      await apiRegister({
+        email,
+        password,
+        current_language: selectedLanguage,
+      });
 
-      if (selectedLanguage) {
-        await setMainLanguage(selectedLanguage);
+      const shortSelectedLanguage = languages.find(
+        (language) => language.id === selectedLanguage
+      )?.languageShort;
+      if (shortSelectedLanguage) {
+        setMainLanguage(shortSelectedLanguage);
       }
 
       navigation.navigate(ROUTES.login);
@@ -115,9 +118,9 @@ const RegisterScreen = ({ navigation }: Props) => {
 
         <View style={Platform.OS !== 'android' ? { zIndex: 1 } : null}>
           <DropDownPicker
-            items={languages.map(({ language, languageShort }) => ({
+            items={languages.map(({ language, id }) => ({
               label: language,
-              value: languageShort,
+              value: id,
             }))}
             multiple={false}
             value={selectedLanguage}

@@ -19,7 +19,6 @@ import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import { TranslationAction } from '../types/swipes';
 import { Translation } from '../types/translations';
-import { getMainLanguage } from '../utils/storage';
 import { RootStackParamList } from '../components/Router';
 
 type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.swipe>;
@@ -29,6 +28,7 @@ export default function SwipeScreen({ navigation }: Props) {
     (state) => state.setReportingTranslation
   );
   const userData = useAppStore((state) => state.userData);
+  const mainLanguage = useAppStore((state) => state.mainLanguage);
 
   const [visibleTranslationIds, setVisibleTranslationsIds] = useState<number[]>(
     []
@@ -41,10 +41,10 @@ export default function SwipeScreen({ navigation }: Props) {
     const fetchTranslations = async () => {
       try {
         setIsLoading(true);
-        const mainLanguage = await getMainLanguage();
         const payload = mainLanguage ? { language: mainLanguage } : {};
         const response = await apiGetTranslations(payload);
         setSwipes(response.data);
+        setCurrentSwipeIndex(0);
       } catch (error) {
         console.error(error);
       } finally {
@@ -53,7 +53,7 @@ export default function SwipeScreen({ navigation }: Props) {
     };
 
     fetchTranslations();
-  }, []);
+  }, [mainLanguage]);
 
   const handleSwiped = async (
     cardIndex: number,
@@ -100,6 +100,7 @@ export default function SwipeScreen({ navigation }: Props) {
             setCurrentSwipeIndex((cardIndex + 1) % swipes.length);
           }}
           infinite
+          cardIndex={currentSwipeIndex}
           backgroundColor={'white'}
           showSecondCard
           stackSize={2}

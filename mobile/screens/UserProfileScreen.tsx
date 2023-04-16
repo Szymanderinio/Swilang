@@ -7,16 +7,14 @@ import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import { Colors } from '../constants/colors';
 import BasicTextInput from '../components/BasicTextInput';
-import { apiGetLanguages, apiUpdateUser } from '../api/api';
-import { asyncStorage } from '../stores/asyncStorage';
-import { API_TOKEN_KEY } from '../constants/storageKeys';
+import {
+  ApiUpdateUserRequest,
+  apiGetLanguages,
+  apiUpdateUser,
+} from '../api/api';
 import { Language } from '../types/translations';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {
-  getMainLanguage,
-  removeApiToken,
-  setMainLanguage,
-} from '../utils/storage';
+import { removeApiToken } from '../utils/storage';
 import { RootStackParamList } from '../components/Router';
 
 type Props = NativeStackScreenProps<
@@ -27,22 +25,19 @@ type Props = NativeStackScreenProps<
 export default function UserProfileScreen({ navigation }: Props) {
   const setUserData = useAppStore((state) => state.setUserData);
   const userData = useAppStore((state) => state.userData);
+  const setMainLanguage = useAppStore((state) => state.setMainLanguage);
+  const mainLanguage = useAppStore((state) => state.mainLanguage);
 
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [languages, setLanguages] = useState<Language[]>([]);
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(
+    mainLanguage
+  );
   const [openLanguageDropdown, setOpenLanguageDropdown] = useState(false);
 
   useEffect(() => {
     const getLanguages = async () => {
-      try {
-        const mainLanguage = await getMainLanguage();
-        setSelectedLanguage(mainLanguage);
-      } catch (error) {
-        console.log(error);
-      }
-
       try {
         const response = await apiGetLanguages();
         if (response.status === 200) {
@@ -67,13 +62,20 @@ export default function UserProfileScreen({ navigation }: Props) {
 
   const saveUserProfile = async () => {
     try {
-      const updateUserResponse = await apiUpdateUser({ firstName, lastName });
+      const selectedLanguageId = languages.find(
+        (language) => language.languageShort === selectedLanguage
+      )?.id;
+      const payload: ApiUpdateUserRequest = {
+        firstName,
+        lastName,
+      };
+      if (selectedLanguageId != undefined) {
+        payload.currentLanguage = selectedLanguageId;
+      }
+      const updateUserResponse = await apiUpdateUser(payload);
       setUserData(updateUserResponse.data);
 
-      const mainLanguage = await getMainLanguage();
-      if (selectedLanguage && selectedLanguage !== mainLanguage) {
-        await setMainLanguage(selectedLanguage);
-      }
+      setMainLanguage(selectedLanguage);
 
       navigation.navigate(ROUTES.swipe);
     } catch (error) {

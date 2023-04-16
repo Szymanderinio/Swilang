@@ -11,7 +11,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
-import { apiGetUser, apiLogin } from '../api/api';
+import { apiGetLanguages, apiGetUser, apiLogin } from '../api/api';
 import BasicTextInput from '../components/BasicTextInput';
 import { Colors } from '../constants/colors';
 import { RootStackParamList } from '../components/Router';
@@ -22,6 +22,7 @@ type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.login>;
 const LoginScreen = ({ navigation }: Props) => {
   const setUserData = useAppStore((state) => state.setUserData);
   const isLoggedIn = useAppStore((state) => state.isLoggedIn);
+  const setMainLanguage = useAppStore((state) => state.setMainLanguage);
 
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState('');
@@ -36,6 +37,13 @@ const LoginScreen = ({ navigation }: Props) => {
         if (apiToken) {
           const responseGetUser = await apiGetUser({ token: apiToken });
           setUserData(responseGetUser.data);
+          const { data: languages } = await apiGetLanguages();
+          const shortLanguage = languages?.find(
+            ({ id }) => responseGetUser.data.currentLanguage === id
+          )?.languageShort;
+          if (shortLanguage) {
+            setMainLanguage(shortLanguage);
+          }
         }
       } catch (e) {
         console.error(e);
@@ -61,6 +69,13 @@ const LoginScreen = ({ navigation }: Props) => {
       });
       setUserData(responseGetUser.data);
       setApiToken(responseLogin.data.key);
+      const { data: languages } = await apiGetLanguages();
+      const shortLanguage = languages?.find(
+        ({ id }) => responseGetUser.data.currentLanguage === id
+      )?.languageShort;
+      if (shortLanguage) {
+        setMainLanguage(shortLanguage);
+      }
     } catch (e) {
       console.error((e as any).request);
       setError('Invalid email or/and password!');
