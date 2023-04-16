@@ -70,6 +70,7 @@ class UserSerializer(serializers.ModelSerializer):
     swipes_left = serializers.SerializerMethodField()
     swipes_right = serializers.SerializerMethodField()
     reports = serializers.SerializerMethodField()
+    translations_knowledge = serializers.SerializerMethodField()
 
     def get_words_added(self, obj):
         return Word.objects.filter(added_by=obj, is_confirmed=True).count()
@@ -86,10 +87,25 @@ class UserSerializer(serializers.ModelSerializer):
     def get_reports(self, obj):
         return Action.objects.filter(user=obj, action_type=Action.REPORT).count()
 
+    def get_translations_knowledge(self, obj):
+        from Swilang.helpers import get_knowledge_level
+        user = self.context['request'].user
+        qs = Translation.objects.filter(language=obj.current_language)
+        dict = {
+            1: 0,
+            2: 0,
+            3: 0,
+        }
+        for q in qs:
+            level = get_knowledge_level(q, user)
+            dict[level] += 1
+        return dict
+
     class Meta:
         model = User
         fields = ('pk', 'email', 'is_staff', 'first_name', 'last_name', 'date_of_birth', 'date_joined',
-                  'current_language', 'words_added', 'translations_added', 'swipes_left', 'swipes_right', 'reports')
+                  'current_language', 'words_added', 'translations_added', 'swipes_left', 'swipes_right', 'reports',
+                  'translations_knowledge')
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
