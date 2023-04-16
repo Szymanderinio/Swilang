@@ -20,13 +20,19 @@ import { RootStackParamList } from '../components/Router';
 
 type ItemProps = {
   title: string;
+  language: string;
   onPress?: ((event: GestureResponderEvent) => void) | null | undefined;
 };
 
-const TranslationConfirmationItemList = ({ title, onPress }: ItemProps) => (
+const TranslationConfirmationItemList = ({
+  title,
+  language,
+  onPress,
+}: ItemProps) => (
   <Pressable onPress={onPress}>
     <View style={styles.translationConfirmationItem}>
       <Text style={styles.translationConfirmationItemTitle}>{title}</Text>
+      <Text style={styles.translationConfirmationItemLanguage}>{language}</Text>
     </View>
   </Pressable>
 );
@@ -87,6 +93,7 @@ export default function TranslationConfirmationListScreen({
             renderItem={({ item }) => (
               <TranslationConfirmationItemList
                 title={item.wordText}
+                language={item.languageText}
                 onPress={() => handleTranslationPress(item.id)}
               />
             )}
@@ -143,7 +150,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.primaryTextColor,
   },
-  translationConfirmationItemDate: {
+  translationConfirmationItemLanguage: {
     fontSize: 15,
     fontWeight: '600',
   },
