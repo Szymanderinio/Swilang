@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -19,19 +20,23 @@ import { ROUTES } from '../types/routes';
 import { RootStackParamList } from '../components/Router';
 
 type ItemProps = {
-  title: string;
+  word: string;
+  translation: string;
   language: string;
   onPress?: ((event: GestureResponderEvent) => void) | null | undefined;
 };
 
 const TranslationConfirmationItemList = ({
-  title,
+  word,
   language,
+  translation,
   onPress,
 }: ItemProps) => (
   <Pressable onPress={onPress}>
     <View style={styles.translationConfirmationItem}>
-      <Text style={styles.translationConfirmationItemTitle}>{title}</Text>
+      <Text style={styles.translationConfirmationItemTitle}>
+        {word} - {translation}
+      </Text>
       <Text style={styles.translationConfirmationItemLanguage}>{language}</Text>
     </View>
   </Pressable>
@@ -45,6 +50,7 @@ type Props = NativeStackScreenProps<
 export default function TranslationConfirmationListScreen({
   navigation,
 }: Props) {
+  const isFocused = useIsFocused();
   const setNotConfirmedTranslation = useAppStore(
     (state) => state.setNotConfirmedTranslation
   );
@@ -64,7 +70,7 @@ export default function TranslationConfirmationListScreen({
     };
 
     getNotConfirmedTranslations();
-  }, []);
+  }, [isFocused]);
 
   const handleTranslationPress = (id: number) => {
     if (translations === null) {
@@ -92,7 +98,8 @@ export default function TranslationConfirmationListScreen({
             data={translations}
             renderItem={({ item }) => (
               <TranslationConfirmationItemList
-                title={item.wordText}
+                word={item.wordText}
+                translation={item.translatedWord}
                 language={item.languageText}
                 onPress={() => handleTranslationPress(item.id)}
               />

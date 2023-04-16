@@ -141,6 +141,25 @@ export const apiPostTranslation = async (props: ApiPostTranslationRequest) =>
     }
   );
 
+// POST /translations/auto_translate/
+export type ApiPostAutoTranslateRequest = {
+  word: string;
+  languageShort: string;
+};
+type ApiPostAutoTranslateResponse = { value: string };
+export const apiPostAutoTranslate = async (
+  props: ApiPostAutoTranslateRequest
+) =>
+  apiServer.post<ApiPostAutoTranslateResponse>(
+    `/translations/auto_translate/`,
+    props,
+    {
+      headers: {
+        Authorization: `Token ${await getApiToken()}`,
+      },
+    }
+  );
+
 // PATCH /translations/
 export type ApiPatchTranslationRequest = {
   translationData: Omit<Partial<TranslationDetails>, 'id'>;

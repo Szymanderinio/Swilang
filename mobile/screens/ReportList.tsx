@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import React, { useEffect } from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useIsFocused } from '@react-navigation/native';
 
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { ROUTES } from '../types/routes';
@@ -42,6 +43,7 @@ type Props = NativeStackScreenProps<
 export default function ReportListScreen({ navigation }: Props) {
   const setReportReviewData = useAppStore((state) => state.setReportReviewData);
   const [reports, setReports] = React.useState<Report[] | null>(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -57,7 +59,7 @@ export default function ReportListScreen({ navigation }: Props) {
     };
 
     fetchReports();
-  }, []);
+  }, [isFocused]);
 
   const handleReportPress = (id: number) => {
     if (reports === null) {
