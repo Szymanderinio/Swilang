@@ -94,7 +94,6 @@ export default function EditTranslationScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Text style={styles.title}>Edit translation</Text>
         <View>
           <View style={styles.editTranslationItem}>
             <Text style={styles.editTranslationItemTitle}>
@@ -130,14 +129,6 @@ export default function EditTranslationScreen({ navigation }: Props) {
         </View>
         <View style={styles.buttons}>
           <BasicButton
-            title='Back'
-            type={ButtonType.secondary}
-            onPress={() =>
-              navigation.navigate(editTranslationData.returnScreen)
-            }
-            style={styles.button}
-          />
-          <BasicButton
             title='Edit'
             style={styles.button}
             onPress={handleEditTranslation}
@@ -161,15 +152,9 @@ const styles = StyleSheet.create({
   },
   box: {
     width: '90%',
-    height: '80%',
+    height: '40%',
     display: 'flex',
     justifyContent: 'space-between',
-  },
-  title: {
-    color: Colors.primaryColor,
-    fontSize: 30,
-    fontWeight: '600',
-    marginBottom: 20,
   },
   buttons: {
     display: 'flex',
@@ -180,8 +165,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   editTranslationItem: {
-    borderBottomColor: Colors.primaryColor,
-    borderBottomWidth: 1,
     paddingVertical: 10,
   },
   editTranslationItemTitle: {

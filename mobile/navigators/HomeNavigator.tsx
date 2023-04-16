@@ -1,12 +1,17 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
+import {
+  MaterialCommunityIcons,
+  Ionicons,
+  MaterialIcons,
+} from '@expo/vector-icons';
 
 import { ROUTES, Route } from '../types/routes';
 import AdminPanelScreen from '../screens/AdminPanelScreen';
 import StatsScreen from '../screens/StatsScreen';
 import SwipeScreen from '../screens/SwipeScreen';
 import { useAppStore } from '../stores/useAppStore';
+import UserProfileScreen from '../screens/UserProfileScreen';
+import { baseScreenOptions } from './RootNavigator';
 
 export type BottomTabParamList = Record<Route, undefined>;
 
@@ -31,11 +36,23 @@ export default function HomeNavigator() {
           ),
         }}
       />
+      <Tab.Screen
+        name={ROUTES.stats}
+        component={StatsScreen}
+        options={{
+          tabBarLabel: 'Stats',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name='stats-chart' size={size} color={color} />
+          ),
+        }}
+      />
       {userData?.isStaff && (
         <Tab.Screen
           name={ROUTES.adminPanel}
           component={AdminPanelScreen}
           options={{
+            ...baseScreenOptions,
+            headerTitle: 'Admin Panel',
             tabBarLabel: 'Admin',
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
@@ -47,13 +64,16 @@ export default function HomeNavigator() {
           }}
         />
       )}
+
       <Tab.Screen
-        name={ROUTES.stats}
-        component={StatsScreen}
+        name={ROUTES.userProfile}
+        component={UserProfileScreen}
         options={{
-          tabBarLabel: 'Stats',
+          ...baseScreenOptions,
+          headerTitle: 'Your Profile',
+          tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name='stats-chart' size={size} color={color} />
+            <MaterialIcons name='person' size={size} color={color} />
           ),
         }}
       />

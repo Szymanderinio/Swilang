@@ -1,4 +1,4 @@
-import { API_TOKEN_KEY, MAIN_LANGUAGE_KEY } from '../constants/storageKeys';
+import { API_TOKEN_KEY } from '../constants/storageKeys';
 import { asyncStorage } from '../stores/asyncStorage';
 import { useAppStore } from '../stores/useAppStore';
 

@@ -110,7 +110,6 @@ export default function AddTranslationScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Text style={styles.title}>Add translation</Text>
         <View style={Platform.OS !== 'android' ? { zIndex: 2 } : null}>
           <BasicTextInput
             autoCapitalize='none'
@@ -149,13 +148,7 @@ export default function AddTranslationScreen({ navigation }: Props) {
         </View>
         <View style={styles.buttons}>
           <BasicButton
-            title='Back'
-            type={ButtonType.secondary}
-            onPress={() => navigation.navigate(ROUTES.adminPanel)}
-            style={styles.button}
-          />
-          <BasicButton
-            title={'Add translation'}
+            title={'Add'}
             style={styles.button}
             onPress={handleAddTranslation}
             disabled={
@@ -180,7 +173,7 @@ const styles = StyleSheet.create({
   },
   box: {
     width: '90%',
-    height: '80%',
+    height: '50%',
     display: 'flex',
     justifyContent: 'space-between',
   },

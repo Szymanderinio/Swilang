@@ -73,7 +73,6 @@ export default function ReportListScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Text style={styles.title}>Report list</Text>
         {reports === null ? (
           <ActivityIndicator size='large' color={Colors.primaryColor} />
         ) : (
@@ -90,15 +89,6 @@ export default function ReportListScreen({ navigation }: Props) {
             ListEmptyComponent={<Text>No reports</Text>}
           />
         )}
-
-        <View style={styles.buttons}>
-          <BasicButton
-            title='Back'
-            type={ButtonType.secondary}
-            onPress={() => navigation.navigate(ROUTES.adminPanel)}
-            style={styles.button}
-          />
-        </View>
       </View>
     </View>
   );
@@ -112,23 +102,9 @@ const styles = StyleSheet.create({
   },
   box: {
     width: '90%',
-    height: '80%',
+    height: '95%',
     display: 'flex',
     justifyContent: 'space-between',
-  },
-  title: {
-    color: Colors.primaryColor,
-    fontSize: 30,
-    fontWeight: '600',
-    marginBottom: 20,
-  },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  button: {
-    marginHorizontal: 10,
   },
   reportItem: {
     borderBottomColor: Colors.primaryColor,

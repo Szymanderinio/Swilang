@@ -108,24 +108,22 @@ export default function ReportReviewScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Text style={styles.title}>Report Review</Text>
         <View>
-          <Text style={styles.reportItemTitle}>Reported translation:</Text>
           <View style={styles.reportItem}>
-            <Text>
+            <Text style={styles.reportText}>
               Original word:{' '}
               <Text style={{ fontWeight: 'bold' }}>
                 {translation?.wordText}
               </Text>
             </Text>
-            <Text>
+            <Text style={styles.reportText}>
               Translation:{' '}
               <Text style={{ fontWeight: 'bold' }}>
                 {translation?.translatedWord}
               </Text>
             </Text>
             {reportReviewData?.createdAt && (
-              <Text>
+              <Text style={styles.reportText}>
                 Report created at:{' '}
                 <Text style={{ fontWeight: 'bold' }}>
                   {new Date(reportReviewData.createdAt).toLocaleString()}
@@ -133,14 +131,14 @@ export default function ReportReviewScreen({ navigation }: Props) {
               </Text>
             )}
             {reportReviewData?.reportType !== undefined ? (
-              <Text>
+              <Text style={styles.reportText}>
                 Type:{' '}
                 <Text style={{ fontWeight: 'bold' }}>
                   {ReportTypeMap[reportReviewData.reportType]}
                 </Text>
               </Text>
             ) : null}
-            <Text>
+            <Text style={styles.reportText}>
               Comment:{' '}
               <Text style={{ fontWeight: 'bold' }}>
                 {reportReviewData?.comment ?? '-'}
@@ -170,14 +168,6 @@ export default function ReportReviewScreen({ navigation }: Props) {
             isLoading={isLoadingDelete}
           />
         </View>
-        <View style={styles.buttons}>
-          <BasicButton
-            title='Back'
-            type={ButtonType.secondary}
-            onPress={() => navigation.navigate(ROUTES.reportList)}
-            style={styles.button}
-          />
-        </View>
       </View>
     </View>
   );
@@ -191,20 +181,9 @@ const styles = StyleSheet.create({
   },
   box: {
     width: '90%',
-    height: '80%',
+    height: '70%',
     display: 'flex',
     justifyContent: 'space-between',
-  },
-  title: {
-    color: Colors.primaryColor,
-    fontSize: 30,
-    fontWeight: '600',
-    marginBottom: 20,
-  },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
   },
   buttonsVertical: {
     display: 'flex',
@@ -218,12 +197,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   reportItem: {
-    borderBottomColor: Colors.primaryColor,
-    borderBottomWidth: 1,
     paddingVertical: 10,
   },
   reportItemTitle: {
     fontSize: 20,
     color: Colors.primaryTextColor,
+  },
+  reportText: {
+    fontSize: 22,
+    lineHeight: 34,
   },
 });

@@ -90,7 +90,6 @@ export default function UserProfileScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Text style={styles.title}>Your Profile</Text>
         <View>
           <BasicTextInput
             autoCapitalize='words'
@@ -129,12 +128,6 @@ export default function UserProfileScreen({ navigation }: Props) {
         </View>
         <View style={[styles.buttons, { marginTop: 'auto' }]}>
           <BasicButton
-            title='Back'
-            type={ButtonType.secondary}
-            onPress={() => navigation.goBack()}
-            style={styles.button}
-          />
-          <BasicButton
             title='Save'
             style={styles.button}
             onPress={saveUserProfile}
@@ -153,15 +146,9 @@ const styles = StyleSheet.create({
   },
   box: {
     width: '90%',
-    height: '80%',
+    height: '90%',
     display: 'flex',
     justifyContent: 'space-between',
-  },
-  title: {
-    color: Colors.primaryColor,
-    fontSize: 30,
-    fontWeight: '600',
-    marginBottom: 20,
   },
   buttons: {
     display: 'flex',

@@ -1,7 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
-import type { CompositeScreenProps } from '@react-navigation/native';
+import { StyleSheet, View } from 'react-native';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import type { StackScreenProps } from '@react-navigation/stack';
 
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { ROUTES } from '../types/routes';
@@ -14,7 +12,6 @@ export default function AdminPanelScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Text style={styles.title}>Admin Panel</Text>
         <View style={styles.buttons}>
           <BasicButton
             title='Report list'
@@ -53,12 +50,6 @@ const styles = StyleSheet.create({
     height: '80%',
     display: 'flex',
     justifyContent: 'space-between',
-  },
-  title: {
-    color: Colors.primaryColor,
-    fontSize: 30,
-    fontWeight: '600',
-    marginBottom: 20,
   },
   buttons: {
     display: 'flex',

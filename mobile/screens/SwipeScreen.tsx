@@ -1,13 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  Image,
-  Text,
-  TouchableWithoutFeedback,
-  ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native';
@@ -80,8 +73,8 @@ export default function SwipeScreen({ navigation }: Props) {
         <Swiper
           cards={swipes}
           containerStyle={styles.swiperContainer}
-          marginTop={40}
-          marginBottom={100}
+          marginTop={30}
+          marginBottom={120}
           renderCard={(data) => {
             return (
               <SwipeCard
@@ -116,25 +109,8 @@ export default function SwipeScreen({ navigation }: Props) {
           }
         />
       ) : null}
-      <View style={styles.topBar}>
-        <Text style={{ flex: 3, height: 30 }}>
-          <Text style={styles.welcomeText}>Hi, </Text>
-          <Text style={styles.welcomeUsername}>
-            {userData?.firstName || userData?.email || 'user'}
-          </Text>
-          <Text style={styles.welcomeText}>!</Text>
-        </Text>
-        <TouchableWithoutFeedback
-          onPress={() => navigation.navigate(ROUTES.userProfile)}
-        >
-          <Image
-            source={require('../assets/images/user.png')}
-            style={{ width: 30, height: 30 }}
-          />
-        </TouchableWithoutFeedback>
-      </View>
       {isLoading ? (
-        <View style={styles.swiperContainer}>
+        <View style={styles.fullScreen}>
           <ActivityIndicator />
         </View>
       ) : null}
@@ -157,7 +133,9 @@ export default function SwipeScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   fullScreen: {
-    marginTop: 150,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
   },
   container: {
@@ -175,6 +153,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   swiperContainer: {
+    flex: 1,
     backgroundColor: Colors.primaryBackgroundColor,
   },
   cardTranslationText: {
@@ -186,13 +165,6 @@ const styles = StyleSheet.create({
     fontSize: 50,
     backgroundColor: 'transparent',
   },
-  topBar: {
-    height: 150,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 20,
-  },
   welcomeText: {
     fontSize: 20,
   },
@@ -201,7 +173,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bottomBar: {
-    height: 80,
+    marginTop: 'auto',
+    height: 100,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',

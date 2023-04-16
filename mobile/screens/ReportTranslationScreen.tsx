@@ -57,7 +57,6 @@ export default function ReportTranslationScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Text style={styles.title}>Report Translation</Text>
         <Text style={styles.textInfo}>
           Original word:&nbsp;
           <Text style={{ fontWeight: 'bold' }}>
@@ -99,15 +98,7 @@ export default function ReportTranslationScreen({ navigation }: Props) {
         )}
         <View style={styles.buttons}>
           <BasicButton
-            title='Cancel'
-            type={ButtonType.secondary}
-            style={styles.button}
-            onPress={() => {
-              navigation.goBack();
-            }}
-          />
-          <BasicButton
-            title='Report'
+            title='Send'
             type={ButtonType.report}
             style={styles.button}
             onPress={reportTranslation}
@@ -129,17 +120,14 @@ const styles = StyleSheet.create({
     width: '90%',
     height: '60%',
   },
-  title: {
-    color: Colors.primaryColor,
-    fontSize: 30,
-    fontWeight: '600',
-  },
   textInfo: {
+    fontSize: 22,
     marginVertical: 5,
   },
   reasonInfo: {
     marginTop: 20,
     marginBottom: 5,
+    fontSize: 22,
   },
   reasonTextarea: {
     borderWidth: 1,

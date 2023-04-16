@@ -90,32 +90,28 @@ export default function TranslationConfirmationReviewScreen({
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Text style={styles.title}>Translation Confirmation Review</Text>
         <View>
-          <Text style={styles.translationConfirmationItemTitle}>
-            Translation:
-          </Text>
           <View style={styles.translationConfirmationItem}>
-            <Text>
+            <Text style={styles.translationText}>
               Original word:{' '}
               <Text style={{ fontWeight: 'bold' }}>
                 {notConfirmedTranslation?.wordText}
               </Text>
             </Text>
-            <Text>
+            <Text style={styles.translationText}>
               Translation:{' '}
               <Text style={{ fontWeight: 'bold' }}>
                 {notConfirmedTranslation?.translatedWord}
               </Text>
             </Text>
-            <Text>
+            <Text style={styles.translationText}>
               Language:{' '}
               <Text style={{ fontWeight: 'bold' }}>
                 {notConfirmedTranslation?.languageText}
               </Text>
             </Text>
             {notConfirmedTranslation?.createdAt && (
-              <Text>
+              <Text style={styles.translationText}>
                 Translation created at:{' '}
                 <Text style={{ fontWeight: 'bold' }}>
                   {new Date(notConfirmedTranslation.createdAt).toLocaleString()}
@@ -146,16 +142,6 @@ export default function TranslationConfirmationReviewScreen({
             isLoading={isLoadingDelete}
           />
         </View>
-        <View style={styles.buttons}>
-          <BasicButton
-            title='Back'
-            type={ButtonType.secondary}
-            onPress={() =>
-              navigation.navigate(ROUTES.translationConfirmationList)
-            }
-            style={styles.button}
-          />
-        </View>
       </View>
     </View>
   );
@@ -169,20 +155,9 @@ const styles = StyleSheet.create({
   },
   box: {
     width: '90%',
-    height: '80%',
+    height: '60%',
     display: 'flex',
     justifyContent: 'space-between',
-  },
-  title: {
-    color: Colors.primaryColor,
-    fontSize: 30,
-    fontWeight: '600',
-    marginBottom: 20,
-  },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
   },
   buttonsVertical: {
     display: 'flex',
@@ -203,5 +178,9 @@ const styles = StyleSheet.create({
   translationConfirmationItemTitle: {
     fontSize: 20,
     color: Colors.primaryTextColor,
+  },
+  translationText: {
+    fontSize: 22,
+    lineHeight: 34,
   },
 });
