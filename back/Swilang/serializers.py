@@ -31,6 +31,7 @@ class TranslationDetailSerializer(serializers.ModelSerializer):
             'language_short_text',
             'language',
             'is_confirmed',
+            'auto_translated',
             'created_by',
             'created_at'
         )

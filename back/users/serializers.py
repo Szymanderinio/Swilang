@@ -87,8 +87,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('pk', 'email', 'is_staff', 'first_name', 'last_name', 'date_of_birth', 'date_joined', 'words_added',
-                  'translations_added', 'swipes_left', 'swipes_right', 'reports')
+        fields = ('pk', 'email', 'is_staff', 'first_name', 'last_name', 'date_of_birth', 'date_joined',
+                  'current_language', 'words_added', 'translations_added', 'swipes_left', 'swipes_right', 'reports')
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
