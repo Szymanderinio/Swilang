@@ -96,13 +96,30 @@ export default function TranslationConfirmationReviewScreen({
             Translation:
           </Text>
           <View style={styles.translationConfirmationItem}>
-            <Text>Original word: {notConfirmedTranslation?.wordText}</Text>
-            <Text>Translation: {notConfirmedTranslation?.translatedWord}</Text>
-            <Text>Language: {notConfirmedTranslation?.languageText}</Text>
+            <Text>
+              Original word:{' '}
+              <Text style={{ fontWeight: 'bold' }}>
+                {notConfirmedTranslation?.wordText}
+              </Text>
+            </Text>
+            <Text>
+              Translation:{' '}
+              <Text style={{ fontWeight: 'bold' }}>
+                {notConfirmedTranslation?.translatedWord}
+              </Text>
+            </Text>
+            <Text>
+              Language:{' '}
+              <Text style={{ fontWeight: 'bold' }}>
+                {notConfirmedTranslation?.languageText}
+              </Text>
+            </Text>
             {notConfirmedTranslation?.createdAt && (
               <Text>
                 Translation created at:{' '}
-                {new Date(notConfirmedTranslation.createdAt).toLocaleString()}
+                <Text style={{ fontWeight: 'bold' }}>
+                  {new Date(notConfirmedTranslation.createdAt).toLocaleString()}
+                </Text>
               </Text>
             )}
           </View>

@@ -98,15 +98,24 @@ export default function EditTranslationScreen({ navigation }: Props) {
         <View>
           <View style={styles.editTranslationItem}>
             <Text style={styles.editTranslationItemTitle}>
-              Original word: {translation?.wordText}
+              Original word:{' '}
+              <Text style={{ fontWeight: 'bold' }}>
+                {translation?.wordText}
+              </Text>
             </Text>
             {translation?.createdAt && (
               <Text style={styles.editTranslationItemTitle}>
-                Created at: {new Date(translation.createdAt).toLocaleString()}
+                Created at:{' '}
+                <Text style={{ fontWeight: 'bold' }}>
+                  {new Date(translation.createdAt).toLocaleString()}
+                </Text>
               </Text>
             )}
             <Text style={styles.editTranslationItemTitle}>
-              Is confirmed: {translation?.isConfirmed ? 'Yes' : 'No'}
+              Is confirmed:{' '}
+              <Text style={{ fontWeight: 'bold' }}>
+                {translation?.isConfirmed ? 'Yes' : 'No'}
+              </Text>
             </Text>
             <Text style={styles.editTranslationItemTitle}>Translation:</Text>
             <BasicTextInput

@@ -112,18 +112,40 @@ export default function ReportReviewScreen({ navigation }: Props) {
         <View>
           <Text style={styles.reportItemTitle}>Reported translation:</Text>
           <View style={styles.reportItem}>
-            <Text>Original word: {translation?.wordText}</Text>
-            <Text>Translation: {translation?.translatedWord}</Text>
+            <Text>
+              Original word:{' '}
+              <Text style={{ fontWeight: 'bold' }}>
+                {translation?.wordText}
+              </Text>
+            </Text>
+            <Text>
+              Translation:{' '}
+              <Text style={{ fontWeight: 'bold' }}>
+                {translation?.translatedWord}
+              </Text>
+            </Text>
             {reportReviewData?.createdAt && (
               <Text>
                 Report created at:{' '}
-                {new Date(reportReviewData.createdAt).toLocaleString()}
+                <Text style={{ fontWeight: 'bold' }}>
+                  {new Date(reportReviewData.createdAt).toLocaleString()}
+                </Text>
               </Text>
             )}
             {reportReviewData?.reportType !== undefined ? (
-              <Text>Type: {ReportTypeMap[reportReviewData.reportType]}</Text>
+              <Text>
+                Type:{' '}
+                <Text style={{ fontWeight: 'bold' }}>
+                  {ReportTypeMap[reportReviewData.reportType]}
+                </Text>
+              </Text>
             ) : null}
-            <Text>Comment: {reportReviewData?.comment ?? '-'}</Text>
+            <Text>
+              Comment:{' '}
+              <Text style={{ fontWeight: 'bold' }}>
+                {reportReviewData?.comment ?? '-'}
+              </Text>
+            </Text>
           </View>
         </View>
         <View style={styles.buttonsVertical}>
