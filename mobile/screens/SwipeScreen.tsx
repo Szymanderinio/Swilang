@@ -12,6 +12,7 @@ import Swiper from 'react-native-deck-swiper';
 import { apiGetTranslations, apiSendActionTranslations } from '../api/api';
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useIsFocused } from '@react-navigation/native';
 
 import SwipeCard from '../components/SwipeCard';
 import { Colors } from '../constants/colors';
@@ -24,6 +25,7 @@ import { RootStackParamList } from '../components/Router';
 type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.swipe>;
 
 export default function SwipeScreen({ navigation }: Props) {
+  const isFocused = useIsFocused();
   const setReportingTranslation = useAppStore(
     (state) => state.setReportingTranslation
   );
@@ -53,7 +55,7 @@ export default function SwipeScreen({ navigation }: Props) {
     };
 
     fetchTranslations();
-  }, [mainLanguage]);
+  }, [isFocused]);
 
   const handleSwiped = async (
     cardIndex: number,
