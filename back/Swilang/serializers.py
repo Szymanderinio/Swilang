@@ -8,10 +8,16 @@ from .models import Translation, Action, Report
 class TranslationListSerializer(serializers.ModelSerializer):
     word_text = serializers.CharField(source='word.word')
     language_text = serializers.CharField(source='language.language_short')
+    knowledge_level = serializers.SerializerMethodField()
+
+    def get_knowledge_level(self, obj):
+        from .helpers import get_knowledge_level
+        user = self.context['request'].user
+        return get_knowledge_level(obj, user)
 
     class Meta:
         model = Translation
-        fields = ('id', 'word_text', 'translated_word', 'language_text')
+        fields = ('id', 'word_text', 'translated_word', 'language_text', 'knowledge_level')
 
 
 class TranslationDetailSerializer(serializers.ModelSerializer):
