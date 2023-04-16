@@ -1,13 +1,12 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { useEffect } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { ROUTES, Route } from '../types/routes';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ReportTranslationScreen from '../screens/ReportTranslationScreen';
 import SwipeScreen from '../screens/SwipeScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
-import { useAppStore } from '../stores/useAppStore';
-import { ROUTES } from '../types/routes';
-import AuthRoute from './AuthRoute';
 import AdminPanelScreen from '../screens/AdminPanelScreen';
 import ReportListScreen from '../screens/ReportList';
 import ReportReviewScreen from '../screens/ReportReview';
@@ -15,91 +14,85 @@ import AddTranslationScreen from '../screens/AddTranslationScreen';
 import TranslationConfirmationListScreen from '../screens/TranslationConfirmationListScreen';
 import TranslationConfirmationReviewScreen from '../screens/TranslationsConfirmationReviewScreen';
 import EditTranslationScreen from '../screens/EditTranslationScreen';
+import { useAppStore } from '../stores/useAppStore';
+import { getApiToken } from '../utils/storage';
+
+export type RootStackParamList = Record<Route, undefined>;
+
+const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 const Router = () => {
-  const currentRoute = useAppStore((state) => state.currentRoute);
+  const isLoggedIn = useAppStore((state) => state.isLoggedIn);
+  const setLoggedIn = useAppStore((state) => state.setLoggedIn);
 
-  switch (currentRoute) {
-    case ROUTES.login:
-      return <LoginScreen />;
-    case ROUTES.register:
-      return <RegisterScreen />;
-    case ROUTES.swipe:
-      return (
-        <AuthRoute>
-          <SwipeScreen />
-        </AuthRoute>
-      );
-    case ROUTES.reportTranslation:
-      return (
-        <AuthRoute>
-          <ReportTranslationScreen />
-        </AuthRoute>
-      );
-    case ROUTES.userProfile:
-      return (
-        <AuthRoute>
-          <UserProfileScreen />
-        </AuthRoute>
-      );
-    case ROUTES.adminPanel:
-      return (
-        <AuthRoute>
-          <AdminPanelScreen />
-        </AuthRoute>
-      );
-    case ROUTES.reportList:
-      return (
-        <AuthRoute>
-          <ReportListScreen />
-        </AuthRoute>
-      );
-    case ROUTES.reportReview:
-      return (
-        <AuthRoute>
-          <ReportReviewScreen />
-        </AuthRoute>
-      );
-    case ROUTES.addTranslation:
-      return (
-        <AuthRoute>
-          <AddTranslationScreen />
-        </AuthRoute>
-      );
-    case ROUTES.translationConfirmationList:
-      return (
-        <AuthRoute>
-          <TranslationConfirmationListScreen />
-        </AuthRoute>
-      );
-    case ROUTES.translationConfirmationReview:
-      return (
-        <AuthRoute>
-          <TranslationConfirmationReviewScreen />
-        </AuthRoute>
-      );
-    case ROUTES.editTranslation:
-      return (
-        <AuthRoute>
-          <EditTranslationScreen />
-        </AuthRoute>
-      );
-    default:
-      const errorRoute: never = currentRoute;
-      return (
-        <View style={styles.container}>
-          <Text>404 Error - Route "{errorRoute}" doesn't exist</Text>
-        </View>
-      );
-  }
+  useEffect(() => {
+    const checkIfLoggedIn = async () => {
+      try {
+        const apiToken = await getApiToken();
+
+        if (apiToken) {
+          setLoggedIn(true);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    checkIfLoggedIn();
+  }, []);
+
+  return (
+    <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      {!isLoggedIn && (
+        <>
+          <RootStack.Screen name={ROUTES.login} component={LoginScreen} />
+          <RootStack.Screen name={ROUTES.register} component={RegisterScreen} />
+        </>
+      )}
+
+      {!!isLoggedIn && (
+        <>
+          <RootStack.Screen name={ROUTES.swipe} component={SwipeScreen} />
+          <RootStack.Screen
+            name={ROUTES.reportTranslation}
+            component={ReportTranslationScreen}
+          />
+          <RootStack.Screen
+            name={ROUTES.userProfile}
+            component={UserProfileScreen}
+          />
+          <RootStack.Screen
+            name={ROUTES.adminPanel}
+            component={AdminPanelScreen}
+          />
+          <RootStack.Screen
+            name={ROUTES.reportList}
+            component={ReportListScreen}
+          />
+          <RootStack.Screen
+            name={ROUTES.reportReview}
+            component={ReportReviewScreen}
+          />
+          <RootStack.Screen
+            name={ROUTES.addTranslation}
+            component={AddTranslationScreen}
+          />
+          <RootStack.Screen
+            name={ROUTES.translationConfirmationList}
+            component={TranslationConfirmationListScreen}
+          />
+          <RootStack.Screen
+            name={ROUTES.translationConfirmationReview}
+            component={TranslationConfirmationReviewScreen}
+          />
+          <RootStack.Screen
+            name={ROUTES.editTranslation}
+            component={EditTranslationScreen}
+          />
+        </>
+      )}
+    </RootStack.Navigator>
+  );
 };
 
 export default Router;
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-  },
-});

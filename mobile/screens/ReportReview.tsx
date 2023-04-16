@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { ROUTES } from '../types/routes';
@@ -12,9 +13,14 @@ import {
   apiGetTranslationDetails,
   apiPatchReport,
 } from '../api/api';
+import { RootStackParamList } from '../components/Router';
 
-export default function ReportReviewScreen() {
-  const changeRoute = useAppStore((state) => state.changeRoute);
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  typeof ROUTES.reportReview
+>;
+
+export default function ReportReviewScreen({ navigation }: Props) {
   const setEditTranslationData = useAppStore(
     (state) => state.setEditTranslationData
   );
@@ -57,7 +63,7 @@ export default function ReportReviewScreen() {
       });
 
       if (response.status === 200) {
-        changeRoute(ROUTES.reportList);
+        navigation.navigate(ROUTES.reportList);
       }
     } catch (error) {
       console.error(error);
@@ -78,7 +84,7 @@ export default function ReportReviewScreen() {
       });
 
       if (response.status === 204) {
-        changeRoute(ROUTES.reportList);
+        navigation.navigate(ROUTES.reportList);
       }
     } catch (error) {
       console.error(error);
@@ -96,7 +102,7 @@ export default function ReportReviewScreen() {
       translationId: reportReviewData?.translation,
       returnScreen: ROUTES.reportReview,
     });
-    changeRoute(ROUTES.editTranslation);
+    navigation.navigate(ROUTES.editTranslation);
   };
 
   return (
@@ -146,7 +152,7 @@ export default function ReportReviewScreen() {
           <BasicButton
             title='Back'
             type={ButtonType.secondary}
-            onPress={() => changeRoute(ROUTES.reportList)}
+            onPress={() => navigation.navigate(ROUTES.reportList)}
             style={styles.button}
           />
         </View>

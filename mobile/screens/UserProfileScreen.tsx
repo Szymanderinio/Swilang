@@ -1,5 +1,6 @@
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { useAppStore } from '../stores/useAppStore';
@@ -11,12 +12,22 @@ import { asyncStorage } from '../stores/asyncStorage';
 import { API_TOKEN_KEY } from '../constants/storageKeys';
 import { Language } from '../types/translations';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { getMainLanguage, setMainLanguage } from '../utils/storage';
+import {
+  getMainLanguage,
+  removeApiToken,
+  setMainLanguage,
+} from '../utils/storage';
+import { RootStackParamList } from '../components/Router';
 
-export default function UserProfileScreen() {
-  const changeRoute = useAppStore((state) => state.changeRoute);
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  typeof ROUTES.userProfile
+>;
+
+export default function UserProfileScreen({ navigation }: Props) {
   const setUserData = useAppStore((state) => state.setUserData);
   const userData = useAppStore((state) => state.userData);
+
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [languages, setLanguages] = useState<Language[]>([]);
@@ -64,15 +75,14 @@ export default function UserProfileScreen() {
         await setMainLanguage(selectedLanguage);
       }
 
-      changeRoute(ROUTES.swipe);
+      navigation.navigate(ROUTES.swipe);
     } catch (error) {
       console.error(error);
     }
   };
 
   const logout = () => {
-    asyncStorage.storeData(null, API_TOKEN_KEY);
-    changeRoute(ROUTES.login);
+    removeApiToken();
   };
 
   return (
@@ -112,23 +122,23 @@ export default function UserProfileScreen() {
         </View>
         <View style={styles.buttons}>
           <BasicButton
+            title='Logout'
+            type={ButtonType.report}
+            onPress={logout}
+            style={styles.button}
+          />
+        </View>
+        <View style={[styles.buttons, { marginTop: 'auto' }]}>
+          <BasicButton
             title='Back'
             type={ButtonType.secondary}
-            onPress={() => changeRoute(ROUTES.swipe)}
+            onPress={() => navigation.navigate(ROUTES.swipe)}
             style={styles.button}
           />
           <BasicButton
             title='Save'
             style={styles.button}
             onPress={saveUserProfile}
-          />
-        </View>
-        <View style={[styles.buttons, { marginTop: 'auto' }]}>
-          <BasicButton
-            title='Logout'
-            type={ButtonType.report}
-            onPress={logout}
-            style={styles.button}
           />
         </View>
       </View>

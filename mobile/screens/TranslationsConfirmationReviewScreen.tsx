@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Colors } from '../constants/colors';
 import BasicButton, { ButtonType } from '../components/BasicButton';
@@ -7,9 +8,16 @@ import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import { apiPatchTranslation } from '../api/api';
 import { apiDeleteTranslation } from '../api/api';
+import { RootStackParamList } from '../components/Router';
 
-export default function TranslationConfirmationReviewScreen() {
-  const changeRoute = useAppStore((state) => state.changeRoute);
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  typeof ROUTES.translationConfirmationReview
+>;
+
+export default function TranslationConfirmationReviewScreen({
+  navigation,
+}: Props) {
   const setEditTranslationData = useAppStore(
     (state) => state.setEditTranslationData
   );
@@ -36,7 +44,7 @@ export default function TranslationConfirmationReviewScreen() {
       });
 
       if (response.status === 200) {
-        changeRoute(ROUTES.translationConfirmationList);
+        navigation.navigate(ROUTES.translationConfirmationList);
       }
     } catch (error) {
       console.error(error);
@@ -58,7 +66,7 @@ export default function TranslationConfirmationReviewScreen() {
       });
 
       if (response.status === 204) {
-        changeRoute(ROUTES.translationConfirmationList);
+        navigation.navigate(ROUTES.translationConfirmationList);
       }
     } catch (error) {
       console.error(error);
@@ -76,7 +84,7 @@ export default function TranslationConfirmationReviewScreen() {
       translationId: notConfirmedTranslation.id,
       returnScreen: ROUTES.translationConfirmationList,
     });
-    changeRoute(ROUTES.editTranslation);
+    navigation.navigate(ROUTES.editTranslation);
   };
 
   return (
@@ -125,7 +133,9 @@ export default function TranslationConfirmationReviewScreen() {
           <BasicButton
             title='Back'
             type={ButtonType.secondary}
-            onPress={() => changeRoute(ROUTES.translationConfirmationList)}
+            onPress={() =>
+              navigation.navigate(ROUTES.translationConfirmationList)
+            }
             style={styles.button}
           />
         </View>

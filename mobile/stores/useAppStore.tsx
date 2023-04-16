@@ -1,7 +1,7 @@
 import create from 'zustand';
 import { ApiGetUserResponse } from '../api/api';
 
-import { Route, ROUTES } from '../types/routes';
+import { Route } from '../types/routes';
 import { NotConfirmedTranslation, Translation } from '../types/translations';
 import { Report } from '../types/reports';
 
@@ -11,7 +11,7 @@ type EditTranslationData = {
 };
 
 type AppStoreVars = {
-  currentRoute: Route;
+  isLoggedIn: boolean;
   userData: ApiGetUserResponse | null;
   reportingTranslation: Translation | null;
   notConfirmedTranslation: NotConfirmedTranslation | null;
@@ -20,7 +20,6 @@ type AppStoreVars = {
 };
 
 type AppStoreFuncs = {
-  changeRoute: (route: Route) => void;
   setUserData: (userData: ApiGetUserResponse | null) => void;
   setReportingTranslation: (reportingTranslation: Translation | null) => void;
   setReportReviewData: (reportReviewData: Report | null) => void;
@@ -30,22 +29,22 @@ type AppStoreFuncs = {
   setEditTranslationData: (
     editTranslationData: EditTranslationData | null
   ) => void;
+  setLoggedIn: (isLoggedIn: boolean) => void;
 };
 
 type AppStore = AppStoreVars & AppStoreFuncs;
 
 const initialState: AppStoreVars = {
-  currentRoute: ROUTES.login,
   reportingTranslation: null,
   userData: null,
   reportReviewData: null,
   notConfirmedTranslation: null,
   editTranslationData: null,
+  isLoggedIn: false,
 };
 
 export const useAppStore = create<AppStore>()((set) => ({
   ...initialState,
-  changeRoute: (route) => set({ currentRoute: route }),
   setUserData: (userData) => set({ userData }),
   setReportingTranslation: (reportingTranslation) =>
     set({ reportingTranslation }),
@@ -53,4 +52,5 @@ export const useAppStore = create<AppStore>()((set) => ({
   setNotConfirmedTranslation: (notConfirmedTranslation) =>
     set({ notConfirmedTranslation }),
   setEditTranslationData: (editTranslationData) => set({ editTranslationData }),
+  setLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
 }));

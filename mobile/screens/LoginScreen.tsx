@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
@@ -7,18 +7,22 @@ import {
   Button,
   ActivityIndicator,
 } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import { apiGetUser, apiLogin } from '../api/api';
 import BasicTextInput from '../components/BasicTextInput';
 import { Colors } from '../constants/colors';
-import { asyncStorage } from '../stores/asyncStorage';
-import { API_TOKEN_KEY } from '../constants/storageKeys';
+import { RootStackParamList } from '../components/Router';
+import { getApiToken, setApiToken } from '../utils/storage';
 
-const LoginScreen = () => {
-  const changeRoute = useAppStore((state) => state.changeRoute);
+type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.login>;
+
+const LoginScreen = ({ navigation }: Props) => {
   const setUserData = useAppStore((state) => state.setUserData);
+  const isLoggedIn = useAppStore((state) => state.isLoggedIn);
+
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,12 +31,11 @@ const LoginScreen = () => {
   useEffect(() => {
     const checkIfLoggedIn = async () => {
       try {
-        const apiToken = await asyncStorage.getData(API_TOKEN_KEY);
+        const apiToken = await getApiToken();
 
         if (apiToken) {
-          const responseGetUser = await apiGetUser();
+          const responseGetUser = await apiGetUser({ token: apiToken });
           setUserData(responseGetUser.data);
-          changeRoute(ROUTES.swipe);
         }
       } catch (e) {
         console.error(e);
@@ -42,7 +45,7 @@ const LoginScreen = () => {
     };
 
     checkIfLoggedIn();
-  }, []);
+  }, [isLoggedIn]);
 
   const handleLogin = async () => {
     setError('');
@@ -53,12 +56,13 @@ const LoginScreen = () => {
 
     try {
       const responseLogin = await apiLogin({ email, password });
-      asyncStorage.storeData(responseLogin.data.key, API_TOKEN_KEY);
-      const responseGetUser = await apiGetUser();
+      const responseGetUser = await apiGetUser({
+        token: responseLogin.data.key,
+      });
       setUserData(responseGetUser.data);
-      changeRoute(ROUTES.swipe);
+      setApiToken(responseLogin.data.key);
     } catch (e) {
-      console.error(e);
+      console.error((e as any).request);
       setError('Invalid email or/and password!');
     }
   };
@@ -97,7 +101,7 @@ const LoginScreen = () => {
       <Text style={styles.registerText}>New to Swilang?</Text>
       <Button
         title='Click here to register'
-        onPress={() => changeRoute(ROUTES.register)}
+        onPress={() => navigation.navigate(ROUTES.register)}
       />
       <StatusBar />
     </View>

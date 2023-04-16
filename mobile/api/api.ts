@@ -61,10 +61,10 @@ export type ApiGetUserResponse = {
   dateOfBirth: string | null;
   dateJoined: string;
 };
-export const apiGetUser = async () =>
+export const apiGetUser = async ({ token }: { token?: string }) =>
   apiServer.get<ApiGetUserResponse>('/auth/user/', {
     headers: {
-      Authorization: `Token ${await getApiToken()}`,
+      Authorization: `Token ${token ?? (await getApiToken())}`,
     },
   });
 

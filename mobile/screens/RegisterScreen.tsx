@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import {
   View,
@@ -11,7 +12,6 @@ import {
 import { apiGetLanguages, apiRegister } from '../api/api';
 import BasicTextInput from '../components/BasicTextInput';
 import { Colors } from '../constants/colors';
-import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import {
   getApiToken,
@@ -20,9 +20,11 @@ import {
 } from '../utils/storage';
 import { Language } from '../types/translations';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { RootStackParamList } from '../components/Router';
 
-const RegisterScreen = () => {
-  const changeRoute = useAppStore((state) => state.changeRoute);
+type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.register>;
+
+const RegisterScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -58,7 +60,7 @@ const RegisterScreen = () => {
         const apiToken = await getApiToken();
 
         if (apiToken) {
-          changeRoute(ROUTES.swipe);
+          navigation.navigate(ROUTES.swipe);
         }
       } catch (error) {
         console.error(error);
@@ -82,7 +84,7 @@ const RegisterScreen = () => {
         await setMainLanguage(selectedLanguage);
       }
 
-      changeRoute(ROUTES.login);
+      navigation.navigate(ROUTES.login);
     } catch (e) {
       console.error(e);
       setError('Invalid email or/and password!');
@@ -131,7 +133,7 @@ const RegisterScreen = () => {
       <Text style={styles.registerText}>Already have an account?</Text>
       <Button
         title='Click here to login'
-        onPress={() => changeRoute(ROUTES.login)}
+        onPress={() => navigation.navigate(ROUTES.login)}
       />
       <StatusBar />
     </View>

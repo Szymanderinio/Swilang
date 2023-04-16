@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { useAppStore } from '../stores/useAppStore';
@@ -8,9 +9,14 @@ import { Colors } from '../constants/colors';
 import { apiGetTranslationDetails, apiPatchTranslation } from '../api/api';
 import { TranslationDetails } from '../types/translations';
 import BasicTextInput from '../components/BasicTextInput';
+import { RootStackParamList } from '../components/Router';
 
-export default function EditTranslationScreen() {
-  const changeRoute = useAppStore((state) => state.changeRoute);
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  typeof ROUTES.editTranslation
+>;
+
+export default function EditTranslationScreen({ navigation }: Props) {
   const editTranslationData = useAppStore((state) => state.editTranslationData);
 
   const [translation, setTranslation] = useState<TranslationDetails | null>(
@@ -63,7 +69,7 @@ export default function EditTranslationScreen() {
       });
 
       if (response.status === 200) {
-        changeRoute(editTranslationData.returnScreen);
+        navigation.navigate(editTranslationData.returnScreen);
       }
     } catch (error) {
       console.error(error);
@@ -73,7 +79,7 @@ export default function EditTranslationScreen() {
   };
 
   if (editTranslationData === null) {
-    changeRoute(ROUTES.swipe);
+    navigation.navigate(ROUTES.swipe);
     return null;
   }
 
@@ -117,7 +123,9 @@ export default function EditTranslationScreen() {
           <BasicButton
             title='Back'
             type={ButtonType.secondary}
-            onPress={() => changeRoute(editTranslationData.returnScreen)}
+            onPress={() =>
+              navigation.navigate(editTranslationData.returnScreen)
+            }
             style={styles.button}
           />
           <BasicButton

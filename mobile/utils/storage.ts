@@ -1,5 +1,6 @@
 import { API_TOKEN_KEY, MAIN_LANGUAGE_KEY } from '../constants/storageKeys';
 import { asyncStorage } from '../stores/asyncStorage';
+import { useAppStore } from '../stores/useAppStore';
 
 export const getApiToken = async () => {
   try {
@@ -7,6 +8,24 @@ export const getApiToken = async () => {
     return token;
   } catch (e) {
     return null;
+  }
+};
+
+export const setApiToken = async (token: string) => {
+  try {
+    await asyncStorage.storeData(token, API_TOKEN_KEY);
+    useAppStore.getState().setLoggedIn(true);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const removeApiToken = async () => {
+  try {
+    await asyncStorage.removeKey(API_TOKEN_KEY);
+    useAppStore.getState().setLoggedIn(false);
+  } catch (e) {
+    console.error(e);
   }
 };
 
@@ -24,6 +43,6 @@ export const setMainLanguage = async (language: string) => {
   try {
     await asyncStorage.storeData(language, MAIN_LANGUAGE_KEY);
   } catch (e) {
-    return null;
+    console.error(e);
   }
 };

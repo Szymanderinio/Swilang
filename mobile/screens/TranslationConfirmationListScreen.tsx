@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import { useEffect, useState } from 'react';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { NotConfirmedTranslation } from '../types/translations';
 import { Colors } from '../constants/colors';
@@ -15,6 +16,7 @@ import { apiGetNotConfirmedTranslations } from '../api/api';
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
+import { RootStackParamList } from '../components/Router';
 
 type ItemProps = {
   title: string;
@@ -29,11 +31,18 @@ const TranslationConfirmationItemList = ({ title, onPress }: ItemProps) => (
   </Pressable>
 );
 
-export default function TranslationConfirmationListScreen() {
-  const changeRoute = useAppStore((state) => state.changeRoute);
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  typeof ROUTES.translationConfirmationList
+>;
+
+export default function TranslationConfirmationListScreen({
+  navigation,
+}: Props) {
   const setNotConfirmedTranslation = useAppStore(
     (state) => state.setNotConfirmedTranslation
   );
+
   const [translations, setTranslations] = useState<
     NotConfirmedTranslation[] | null
   >(null);
@@ -63,7 +72,7 @@ export default function TranslationConfirmationListScreen() {
     }
 
     setNotConfirmedTranslation(translation);
-    changeRoute(ROUTES.translationConfirmationReview);
+    navigation.navigate(ROUTES.translationConfirmationReview);
   };
 
   return (
@@ -90,7 +99,7 @@ export default function TranslationConfirmationListScreen() {
           <BasicButton
             title='Back'
             type={ButtonType.secondary}
-            onPress={() => changeRoute(ROUTES.adminPanel)}
+            onPress={() => navigation.navigate(ROUTES.adminPanel)}
             style={styles.button}
           />
         </View>

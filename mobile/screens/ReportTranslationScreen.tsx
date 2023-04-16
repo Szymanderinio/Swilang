@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import React, { useState } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Colors } from '../constants/colors';
 import { useAppStore } from '../stores/useAppStore';
@@ -8,20 +9,26 @@ import BasicButton, { ButtonType } from '../components/BasicButton';
 import { ROUTES } from '../types/routes';
 import { apiSendReportTranslations } from '../api/api';
 import { ReportType } from '../types/swipes';
+import { RootStackParamList } from '../components/Router';
 
-export default function ReportTranslationScreen() {
-  const [open, setOpen] = useState(false);
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  typeof ROUTES.reportTranslation
+>;
+
+export default function ReportTranslationScreen({ navigation }: Props) {
   const reportingTranslation = useAppStore(
     (state) => state.reportingTranslation
   );
-  const changeRoute = useAppStore((state) => state.changeRoute);
+
+  const [open, setOpen] = useState(false);
   const [reasonText, setReasonText] = useState('');
   const [reportType, setReportType] = useState<
     typeof ReportType[keyof typeof ReportType] | null
   >(null);
 
   if (!reportingTranslation) {
-    changeRoute(ROUTES.swipe);
+    navigation.navigate(ROUTES.swipe);
 
     return null;
   }
@@ -41,7 +48,7 @@ export default function ReportTranslationScreen() {
         translationID: reportingTranslation.id,
         comment: reasonText || undefined,
       });
-      changeRoute(ROUTES.swipe);
+      navigation.navigate(ROUTES.swipe);
     } catch (error) {
       console.error(error);
     }
@@ -96,7 +103,7 @@ export default function ReportTranslationScreen() {
             type={ButtonType.secondary}
             style={styles.button}
             onPress={() => {
-              changeRoute(ROUTES.swipe);
+              navigation.navigate(ROUTES.swipe);
             }}
           />
           <BasicButton

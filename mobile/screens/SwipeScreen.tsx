@@ -11,6 +11,7 @@ import {
 import Swiper from 'react-native-deck-swiper';
 import { apiGetTranslations, apiSendActionTranslations } from '../api/api';
 import BasicButton, { ButtonType } from '../components/BasicButton';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import SwipeCard from '../components/SwipeCard';
 import { Colors } from '../constants/colors';
@@ -19,13 +20,16 @@ import { ROUTES } from '../types/routes';
 import { TranslationAction } from '../types/swipes';
 import { Translation } from '../types/translations';
 import { getMainLanguage } from '../utils/storage';
+import { RootStackParamList } from '../components/Router';
 
-export default function SwipeScreen() {
-  const changeRoute = useAppStore((state) => state.changeRoute);
+type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.swipe>;
+
+export default function SwipeScreen({ navigation }: Props) {
   const setReportingTranslation = useAppStore(
     (state) => state.setReportingTranslation
   );
   const userData = useAppStore((state) => state.userData);
+
   const [visibleTranslationIds, setVisibleTranslationsIds] = useState<number[]>(
     []
   );
@@ -118,7 +122,7 @@ export default function SwipeScreen() {
           <Text style={styles.welcomeText}>!</Text>
         </Text>
         <TouchableWithoutFeedback
-          onPress={() => changeRoute(ROUTES.userProfile)}
+          onPress={() => navigation.navigate(ROUTES.userProfile)}
         >
           <Image
             source={require('../assets/images/user.png')}
@@ -136,7 +140,7 @@ export default function SwipeScreen() {
           <BasicButton
             title='Admin Panel'
             style={styles.button}
-            onPress={() => changeRoute(ROUTES.adminPanel)}
+            onPress={() => navigation.navigate(ROUTES.adminPanel)}
           />
         )}
         <BasicButton
@@ -146,7 +150,7 @@ export default function SwipeScreen() {
           onPress={() => {
             setReportingTranslation(swipes[currentSwipeIndex]);
 
-            changeRoute(ROUTES.reportTranslation);
+            navigation.navigate(ROUTES.reportTranslation);
           }}
         />
       </View>

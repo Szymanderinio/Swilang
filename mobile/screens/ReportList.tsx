@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import React, { useEffect } from 'react';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { ROUTES } from '../types/routes';
@@ -16,6 +17,7 @@ import { apiGetReports } from '../api/api';
 import { Report } from '../types/reports';
 import { useAppStore } from '../stores/useAppStore';
 import { ReportTypeMap } from '../types/swipes';
+import { RootStackParamList } from '../components/Router';
 
 type ItemProps = {
   title: string;
@@ -32,8 +34,12 @@ const ReportItemList = ({ title, date, onPress }: ItemProps) => (
   </Pressable>
 );
 
-export default function ReportListScreen() {
-  const changeRoute = useAppStore((state) => state.changeRoute);
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  typeof ROUTES.reportList
+>;
+
+export default function ReportListScreen({ navigation }: Props) {
   const setReportReviewData = useAppStore((state) => state.setReportReviewData);
   const [reports, setReports] = React.useState<Report[] | null>(null);
 
@@ -59,7 +65,7 @@ export default function ReportListScreen() {
     }
 
     setReportReviewData(reports.find((report) => report.id === id) ?? null);
-    changeRoute(ROUTES.reportReview);
+    navigation.navigate(ROUTES.reportReview);
   };
 
   return (
@@ -87,7 +93,7 @@ export default function ReportListScreen() {
           <BasicButton
             title='Back'
             type={ButtonType.secondary}
-            onPress={() => changeRoute(ROUTES.adminPanel)}
+            onPress={() => navigation.navigate(ROUTES.adminPanel)}
             style={styles.button}
           />
         </View>

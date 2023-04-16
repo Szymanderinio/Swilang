@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { ROUTES } from '../types/routes';
 import { Colors } from '../constants/colors';
-import { useAppStore } from '../stores/useAppStore';
 import BasicTextInput from '../components/BasicTextInput';
 import {
   ApiPostTranslationRequest,
@@ -15,10 +15,14 @@ import {
   apiPostTranslation,
 } from '../api/api';
 import { Language, TranslationFull } from '../types/translations';
+import { RootStackParamList } from '../components/Router';
 
-export default function AddTranslationScreen() {
-  const changeRoute = useAppStore((state) => state.changeRoute);
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  typeof ROUTES.addTranslation
+>;
 
+export default function AddTranslationScreen({ navigation }: Props) {
   const [openLanguageDropdown, setOpenLanguageDropdown] = useState(false);
   const [translation, setTranslation] = useState<string>('');
   const [word, setWord] = useState<string>('');
@@ -58,7 +62,7 @@ export default function AddTranslationScreen() {
         }
       }
 
-      changeRoute(ROUTES.adminPanel);
+      navigation.navigate(ROUTES.adminPanel);
       return;
     }
 
@@ -80,7 +84,7 @@ export default function AddTranslationScreen() {
       const response = await apiPostTranslation(newTranslationPayload);
 
       if (response.status === 201) {
-        changeRoute(ROUTES.adminPanel);
+        navigation.navigate(ROUTES.adminPanel);
       }
     } catch (error) {
       console.log(error);
@@ -130,7 +134,7 @@ export default function AddTranslationScreen() {
       });
     }
 
-    changeRoute(ROUTES.adminPanel);
+    navigation.navigate(ROUTES.adminPanel);
   };
 
   return (
