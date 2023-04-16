@@ -1,22 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { CompositeScreenProps } from '@react-navigation/native';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { StackScreenProps } from '@react-navigation/stack';
 
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { ROUTES } from '../types/routes';
 import { Colors } from '../constants/colors';
 import { RootStackParamList } from '../navigators/RootNavigator';
 
-type Props = NativeStackScreenProps<
-  RootStackParamList,
-  typeof ROUTES.adminPanel
->;
+type Props = BottomTabScreenProps<RootStackParamList, typeof ROUTES.adminPanel>;
 
 export default function AdminPanelScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
         <Text style={styles.title}>Admin Panel</Text>
-        <View>
+        <View style={styles.buttons}>
           <BasicButton
             title='Report list'
             type={ButtonType.info}
@@ -35,14 +34,6 @@ export default function AdminPanelScreen({ navigation }: Props) {
             onPress={() =>
               navigation.navigate(ROUTES.translationConfirmationList)
             }
-            style={styles.button}
-          />
-        </View>
-        <View style={styles.buttons}>
-          <BasicButton
-            title='Back'
-            type={ButtonType.secondary}
-            onPress={() => navigation.navigate(ROUTES.swipe)}
             style={styles.button}
           />
         </View>
@@ -71,8 +62,9 @@ const styles = StyleSheet.create({
   },
   buttons: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
+    flex: 1,
   },
   button: {
     marginHorizontal: 10,

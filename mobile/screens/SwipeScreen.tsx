@@ -9,11 +9,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
-import { apiGetTranslations, apiSendActionTranslations } from '../api/api';
-import BasicButton, { ButtonType } from '../components/BasicButton';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native';
 
+import { apiGetTranslations, apiSendActionTranslations } from '../api/api';
+import BasicButton, { ButtonType } from '../components/BasicButton';
 import SwipeCard from '../components/SwipeCard';
 import { Colors } from '../constants/colors';
 import { useAppStore } from '../stores/useAppStore';
@@ -139,13 +139,6 @@ export default function SwipeScreen({ navigation }: Props) {
         </View>
       ) : null}
       <View style={styles.bottomBar}>
-        {userData?.isStaff && (
-          <BasicButton
-            title='Admin Panel'
-            style={styles.button}
-            onPress={() => navigation.navigate(ROUTES.adminPanel)}
-          />
-        )}
         <BasicButton
           title='Report'
           type={ButtonType.report}
@@ -208,7 +201,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bottomBar: {
-    height: 170,
+    height: 80,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',

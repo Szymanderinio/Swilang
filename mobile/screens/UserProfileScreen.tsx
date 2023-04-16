@@ -77,7 +77,7 @@ export default function UserProfileScreen({ navigation }: Props) {
 
       setMainLanguage(selectedLanguage);
 
-      navigation.navigate(ROUTES.swipe);
+      navigation.goBack();
     } catch (error) {
       console.error(error);
     }
@@ -131,7 +131,7 @@ export default function UserProfileScreen({ navigation }: Props) {
           <BasicButton
             title='Back'
             type={ButtonType.secondary}
-            onPress={() => navigation.navigate(ROUTES.swipe)}
+            onPress={() => navigation.goBack()}
             style={styles.button}
           />
           <BasicButton

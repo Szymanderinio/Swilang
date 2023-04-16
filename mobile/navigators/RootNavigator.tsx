@@ -16,6 +16,7 @@ import TranslationConfirmationReviewScreen from '../screens/TranslationsConfirma
 import EditTranslationScreen from '../screens/EditTranslationScreen';
 import { useAppStore } from '../stores/useAppStore';
 import { getApiToken } from '../utils/storage';
+import HomeNavigator from './HomeNavigator';
 
 export type RootStackParamList = Record<Route, undefined>;
 
@@ -52,6 +53,7 @@ export default function RootNavigator() {
 
       {!!isLoggedIn && (
         <>
+          <RootStack.Screen name={ROUTES.home} component={HomeNavigator} />
           <RootStack.Screen name={ROUTES.swipe} component={SwipeScreen} />
           <RootStack.Screen
             name={ROUTES.reportTranslation}
@@ -60,10 +62,6 @@ export default function RootNavigator() {
           <RootStack.Screen
             name={ROUTES.userProfile}
             component={UserProfileScreen}
-          />
-          <RootStack.Screen
-            name={ROUTES.adminPanel}
-            component={AdminPanelScreen}
           />
           <RootStack.Screen
             name={ROUTES.reportList}

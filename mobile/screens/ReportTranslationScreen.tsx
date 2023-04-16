@@ -48,7 +48,7 @@ export default function ReportTranslationScreen({ navigation }: Props) {
         translationID: reportingTranslation.id,
         comment: reasonText || undefined,
       });
-      navigation.navigate(ROUTES.swipe);
+      navigation.goBack();
     } catch (error) {
       console.error(error);
     }
@@ -103,7 +103,7 @@ export default function ReportTranslationScreen({ navigation }: Props) {
             type={ButtonType.secondary}
             style={styles.button}
             onPress={() => {
-              navigation.navigate(ROUTES.swipe);
+              navigation.goBack();
             }}
           />
           <BasicButton
