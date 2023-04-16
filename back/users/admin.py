@@ -13,7 +13,7 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ('is_staff', 'is_superuser')
 
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'is_active', 'date_joined')}),
+        (None, {'fields': ('email', 'password', 'is_active', 'current_language', 'date_joined')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'date_of_birth',)}),
         ('Permissions', {'fields': ('is_superuser', 'is_staff', )}),
     )

@@ -33,6 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_of_birth = models.DateField(null=True, blank=True)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     date_confirmed = models.DateTimeField(_('date confirmed'), null=True, blank=True)
+    current_language = models.ForeignKey('languages.Language', null=True, blank=True, on_delete=models.SET_NULL)
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
