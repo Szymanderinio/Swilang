@@ -22,7 +22,6 @@ export default function SwipeScreen({ navigation }: Props) {
   const setReportingTranslation = useAppStore(
     (state) => state.setReportingTranslation
   );
-  const userData = useAppStore((state) => state.userData);
   const mainLanguage = useAppStore((state) => state.mainLanguage);
 
   const [visibleTranslationIds, setVisibleTranslationsIds] = useState<number[]>(

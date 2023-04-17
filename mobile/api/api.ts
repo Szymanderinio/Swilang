@@ -67,6 +67,7 @@ export type ApiGetUserResponse = {
   swipesLeft: number;
   swipesRight: number;
   reports: number;
+  translationsKnowledge: Record<1 | 2 | 3, number>;
 };
 export const apiGetUser = async ({ token }: { token?: string }) =>
   apiServer.get<ApiGetUserResponse>('/auth/user/', {

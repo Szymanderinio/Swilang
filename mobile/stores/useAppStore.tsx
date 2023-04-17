@@ -1,6 +1,6 @@
 import create from 'zustand';
-import { ApiGetUserResponse } from '../api/api';
 
+import { ApiGetUserResponse } from '../api/api';
 import { Route } from '../types/routes';
 import { NotConfirmedTranslation, Translation } from '../types/translations';
 import { Report } from '../types/reports';

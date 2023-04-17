@@ -12,6 +12,7 @@ import SwipeScreen from '../screens/SwipeScreen';
 import { useAppStore } from '../stores/useAppStore';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import { baseScreenOptions } from './RootNavigator';
+import { Platform } from 'react-native';
 
 export type BottomTabParamList = Record<Route, undefined>;
 
@@ -21,7 +22,17 @@ export default function HomeNavigator() {
   const userData = useAppStore((state) => state.userData);
 
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          height: 80 + (Platform.OS === 'ios' ? 0 : -10),
+        },
+        tabBarLabelStyle: {
+          marginBottom: Platform.OS === 'ios' ? 0 : 12,
+        },
+      }}
+    >
       <Tab.Screen
         name={ROUTES.swipe}
         component={SwipeScreen}
