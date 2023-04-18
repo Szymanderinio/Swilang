@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
+import Logo from '../assets/images/logo.svg';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import { apiGetLanguages, apiGetUser, apiLogin } from '../api/api';
@@ -93,7 +94,7 @@ const LoginScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-        <Text style={styles.logo}>Swilang</Text>
+        <Logo width={300} style={styles.logo} />
         {error && <Text style={styles.errorText}>{error}</Text>}
         <BasicTextInput
           autoCapitalize='none'
@@ -136,11 +137,7 @@ const styles = StyleSheet.create({
     height: '50%',
   },
   logo: {
-    textAlign: 'center',
-    fontSize: 40,
-    marginBottom: 20,
-    color: Colors.primaryColor,
-    fontWeight: 'bold',
+    alignSelf: 'center',
   },
   errorText: {
     color: Colors.negativeColor,

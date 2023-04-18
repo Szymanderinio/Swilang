@@ -43,7 +43,9 @@ export default function RootNavigator() {
   }, []);
 
   return (
-    <RootStack.Navigator screenOptions={{ headerShown: false }}>
+    <RootStack.Navigator
+      screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
+    >
       {!isLoggedIn && (
         <>
           <RootStack.Screen name={ROUTES.login} component={LoginScreen} />

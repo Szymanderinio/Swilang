@@ -1,4 +1,11 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import React, { useState } from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -55,57 +62,60 @@ export default function ReportTranslationScreen({ navigation }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.box}>
-        <Text style={styles.textInfo}>
-          Original word:&nbsp;
-          <Text style={{ fontWeight: 'bold' }}>
-            {reportingTranslation?.wordText}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <View style={styles.box}>
+          <Text style={styles.textInfo}>
+            Original word:&nbsp;
+            <Text style={{ fontWeight: 'bold' }}>
+              {reportingTranslation?.wordText}
+            </Text>
           </Text>
-        </Text>
-        <Text style={styles.textInfo}>
-          Translation:&nbsp;
-          <Text style={{ fontWeight: 'bold' }}>
-            {reportingTranslation?.translatedWord}
+          <Text style={styles.textInfo}>
+            Translation:&nbsp;
+            <Text style={{ fontWeight: 'bold' }}>
+              {reportingTranslation?.translatedWord}
+            </Text>
           </Text>
-        </Text>
-        <Text style={styles.textInfo}>
-          Language:&nbsp;
-          <Text style={{ fontWeight: 'bold' }}>
-            {reportingTranslation?.languageText}
+          <Text style={styles.textInfo}>
+            Language:&nbsp;
+            <Text style={{ fontWeight: 'bold' }}>
+              {reportingTranslation?.languageText}
+            </Text>
           </Text>
-        </Text>
-        <Text style={styles.reasonInfo}>Reason:</Text>
-        <Dropdown
-          open={open}
-          setOpen={setOpen}
-          items={dropdownOptions}
-          value={reportType}
-          setValue={setReportType}
-        />
-
-        {reportType === ReportType.OTHER && (
-          <>
-            <Text style={styles.reasonInfo}>Comment:</Text>
-            <TextInput
-              multiline={true}
-              numberOfLines={4}
-              onChangeText={(text) => setReasonText(text)}
-              value={reasonText}
-              style={styles.reasonTextarea}
-            />
-          </>
-        )}
-        <View style={styles.buttons}>
-          <BasicButton
-            title='Send'
-            type={ButtonType.report}
-            style={styles.button}
-            onPress={reportTranslation}
+          <Text style={styles.reasonInfo}>Reason:</Text>
+          <Dropdown
+            open={open}
+            setOpen={setOpen}
+            items={dropdownOptions}
+            value={reportType}
+            setValue={setReportType}
           />
+
+          {reportType === ReportType.OTHER && (
+            <>
+              <Text style={styles.reasonInfo}>Comment:</Text>
+              <TextInput
+                multiline={true}
+                numberOfLines={4}
+                onChangeText={(text) => setReasonText(text)}
+                value={reasonText}
+                style={styles.reasonTextarea}
+                placeholder='Enter your comment here'
+              />
+            </>
+          )}
+          <View style={styles.buttons}>
+            <BasicButton
+              title='Send'
+              type={ButtonType.report}
+              style={styles.button}
+              onPress={reportTranslation}
+            />
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -118,7 +128,7 @@ const styles = StyleSheet.create({
   },
   box: {
     width: '90%',
-    height: '60%',
+    height: '80%',
   },
   textInfo: {
     fontSize: 22,
@@ -131,11 +141,12 @@ const styles = StyleSheet.create({
   },
   reasonTextarea: {
     borderWidth: 1,
-    borderColor: Colors.secondaryColor,
     marginVertical: 10,
-    paddingVertical: 15,
     paddingHorizontal: 10,
     height: 100,
+    backgroundColor: Colors.primaryBackgroundColor,
+    borderColor: Colors.primaryColor,
+    borderRadius: 10,
   },
   buttons: {
     marginVertical: 20,

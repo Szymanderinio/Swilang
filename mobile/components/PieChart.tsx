@@ -1,5 +1,7 @@
 import { PieChart as PieChartKit } from 'react-native-chart-kit';
+import { PieChartProps } from 'react-native-chart-kit/dist/PieChart';
 import { Dimensions, Text, View, StyleSheet } from 'react-native';
+
 import { Colors } from '../constants/colors';
 
 const windowWidth = Dimensions.get('window').width;
@@ -12,13 +14,19 @@ type Props = {
   data: Record<string, any>[];
   accessor: string;
   title: string;
-};
+} & Partial<PieChartProps>;
 
-export default function PieChart({ data, accessor, title }: Props) {
+export default function PieChart({
+  data,
+  accessor,
+  title,
+  ...restProps
+}: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
       <PieChartKit
+        {...restProps}
         data={data}
         width={windowWidth - 100}
         height={120}

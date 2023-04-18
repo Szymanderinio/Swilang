@@ -1,11 +1,7 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { AntDesign } from '@expo/vector-icons';
+
 import { Colors } from '../constants/colors';
 
 type Props = {
@@ -57,11 +53,8 @@ const SwipeCard = ({ text1, text2, id, setVisibleTranslationsIds }: Props) => {
                       { backgroundColor: Colors.negativeColor },
                     ]}
                   >
-                    <Image
-                      source={require('../assets/images/left-arrow.png')}
-                      style={{ width: 30, height: 30 }}
-                    />
-                    <Text style={styles.afterHint}>wrong</Text>
+                    <AntDesign name='arrowleft' size={30} color='black' />
+                    <Text style={styles.hintText}>wrong</Text>
                   </View>
                   <View
                     style={[
@@ -69,15 +62,12 @@ const SwipeCard = ({ text1, text2, id, setVisibleTranslationsIds }: Props) => {
                       { backgroundColor: Colors.positiveColor },
                     ]}
                   >
-                    <Image
-                      source={require('../assets/images/right-arrow.png')}
-                      style={{ width: 30, height: 30 }}
-                    />
-                    <Text style={styles.afterHint}>good</Text>
+                    <AntDesign name='arrowright' size={30} color='black' />
+                    <Text style={styles.hintText}>good</Text>
                   </View>
                 </View>
               ) : (
-                <Text style={styles.preHint}>tap to reveal</Text>
+                <Text style={styles.hintText}>tap to reveal</Text>
               )}
             </View>
           </View>
@@ -158,12 +148,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.primaryColor,
     borderStyle: 'dashed',
   },
-  preHint: {
-    fontSize: 22,
-    textAlign: 'center',
-    color: Colors.primaryTextColor,
-  },
-  afterHint: {
+  hintText: {
     fontSize: 22,
     textAlign: 'center',
     color: Colors.primaryTextColor,

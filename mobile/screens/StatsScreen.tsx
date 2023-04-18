@@ -95,7 +95,9 @@ export default function StatsScreen() {
 
   const charts = [
     {
-      component: <PieChart data={swipesData} accessor='count' title='Swipes' />,
+      component: (
+        <PieChart data={swipesData} accessor='count' title='Swipes' absolute />
+      ),
       id: 'swipes',
     },
     {
@@ -131,12 +133,9 @@ export default function StatsScreen() {
         marginBottom: 10,
       }}
     >
-      {/* <FlatList
-        data={charts}
-        renderItem={({ item }) => item.component}
-        keyExtractor={(item) => item.id}
-      /> */}
-      {charts.map((chart) => cloneElement(chart.component, { key: chart.id }))}
+      {charts.map(({ component, id }) => (
+        <View key={id}>{component}</View>
+      ))}
     </View>
   );
 }

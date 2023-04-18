@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { View, Text, StatusBar, StyleSheet, Button } from 'react-native';
 
-import {
-  View,
-  Text,
-  StatusBar,
-  StyleSheet,
-  Button,
-  Platform,
-} from 'react-native';
+import Logo from '../assets/images/logo.svg';
 import { apiGetLanguages, apiRegister } from '../api/api';
 import BasicTextInput from '../components/BasicTextInput';
 import { Colors } from '../constants/colors';
@@ -97,7 +91,7 @@ const RegisterScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-        <Text style={styles.logo}>Swilang</Text>
+        <Logo width={300} style={styles.logo} />
         {error && <Text style={styles.errorText}>{error}</Text>}
         <BasicTextInput
           autoCapitalize='none'
@@ -128,12 +122,12 @@ const RegisterScreen = ({ navigation }: Props) => {
           placeholder='Select language'
         />
         <Button title='Register' onPress={handleRegister} />
+        <Text style={styles.registerText}>Already have an account?</Text>
+        <Button
+          title='Click here to login'
+          onPress={() => navigation.navigate(ROUTES.login)}
+        />
       </View>
-      <Text style={styles.registerText}>Already have an account?</Text>
-      <Button
-        title='Click here to login'
-        onPress={() => navigation.navigate(ROUTES.login)}
-      />
       <StatusBar />
     </View>
   );
@@ -152,11 +146,7 @@ const styles = StyleSheet.create({
     height: '50%',
   },
   logo: {
-    textAlign: 'center',
-    fontSize: 40,
-    marginBottom: 20,
-    color: Colors.primaryColor,
-    fontWeight: 'bold',
+    alignSelf: 'center',
   },
   errorText: {
     color: 'red',
@@ -165,6 +155,7 @@ const styles = StyleSheet.create({
   },
   registerText: {
     textAlign: 'center',
+    marginTop: 20,
   },
 });
 

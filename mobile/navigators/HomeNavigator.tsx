@@ -57,24 +57,22 @@ export default function HomeNavigator() {
           ),
         }}
       />
-      {userData?.isStaff && (
-        <Tab.Screen
-          name={ROUTES.adminPanel}
-          component={AdminPanelScreen}
-          options={{
-            ...baseScreenOptions,
-            headerTitle: 'Admin Panel',
-            tabBarLabel: 'Admin',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name='hammer-screwdriver'
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-      )}
+      <Tab.Screen
+        name={ROUTES.adminPanel}
+        component={AdminPanelScreen}
+        options={{
+          ...baseScreenOptions,
+          headerTitle: 'Settings',
+          tabBarLabel: 'Settings',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name='hammer-screwdriver'
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
 
       <Tab.Screen
         name={ROUTES.userProfile}

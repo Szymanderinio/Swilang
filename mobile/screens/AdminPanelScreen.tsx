@@ -1,40 +1,53 @@
 import { StyleSheet, View } from 'react-native';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
-import BasicButton, { ButtonType } from '../components/BasicButton';
 import { ROUTES } from '../types/routes';
-import { Colors } from '../constants/colors';
 import { RootStackParamList } from '../navigators/RootNavigator';
+import Tiles, { TileItem } from '../components/Tiles';
+import { Colors } from '../constants/colors';
+import { useAppStore } from '../stores/useAppStore';
 
 type Props = BottomTabScreenProps<RootStackParamList, typeof ROUTES.adminPanel>;
 
 export default function AdminPanelScreen({ navigation }: Props) {
+  const userData = useAppStore((state) => state.userData);
+
+  const tiles: TileItem[] = [
+    {
+      title: 'Report list',
+      icon: (
+        <MaterialIcons name='report' size={36} color={Colors.primaryColor} />
+      ),
+      onPress: () => navigation.navigate(ROUTES.reportList),
+      visible: userData?.isStaff,
+    },
+    {
+      title: 'Add translation',
+      icon: (
+        <AntDesign name='pluscircleo' size={30} color={Colors.primaryColor} />
+      ),
+      onPress: () => navigation.navigate(ROUTES.addTranslation),
+      visible: true,
+    },
+    {
+      title: 'Not confirmed translations list',
+      icon: (
+        <MaterialIcons
+          name='playlist-add-check'
+          size={30}
+          color={Colors.primaryColor}
+        />
+      ),
+      onPress: () => navigation.navigate(ROUTES.translationConfirmationList),
+      visible: userData?.isStaff,
+    },
+  ];
+
   return (
     <View style={styles.container}>
-      <View style={styles.box}>
-        <View style={styles.buttons}>
-          <BasicButton
-            title='Report list'
-            type={ButtonType.info}
-            onPress={() => navigation.navigate(ROUTES.reportList)}
-            style={styles.button}
-          />
-          <BasicButton
-            title='Add translation'
-            type={ButtonType.info}
-            onPress={() => navigation.navigate(ROUTES.addTranslation)}
-            style={styles.button}
-          />
-          <BasicButton
-            title='Not confirmed translations list'
-            type={ButtonType.info}
-            onPress={() =>
-              navigation.navigate(ROUTES.translationConfirmationList)
-            }
-            style={styles.button}
-          />
-        </View>
-      </View>
+      <Tiles items={tiles} />
     </View>
   );
 }
@@ -44,30 +57,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
-  },
-  box: {
-    width: '90%',
-    height: '80%',
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  button: {
-    marginHorizontal: 10,
-    marginBottom: 10,
-  },
-  reportItem: {
-    borderBottomColor: Colors.primaryColor,
-    borderBottomWidth: 1,
-    paddingVertical: 10,
-  },
-  reportItemTitle: {
-    fontSize: 20,
-    color: Colors.primaryTextColor,
   },
 });
