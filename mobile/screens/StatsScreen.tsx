@@ -129,7 +129,7 @@ export default function StatsScreen() {
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
-        marginTop: 50,
+        marginTop: 20,
         marginBottom: 10,
       }}
     >

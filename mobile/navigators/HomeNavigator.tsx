@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   MaterialCommunityIcons,
@@ -13,6 +14,8 @@ import { useAppStore } from '../stores/useAppStore';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import { baseScreenOptions } from './RootNavigator';
 import { Platform } from 'react-native';
+import { Language } from '../types/translations';
+import { apiGetLanguages } from '../api/api';
 
 export type BottomTabParamList = Record<Route, undefined>;
 
@@ -20,6 +23,25 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function HomeNavigator() {
   const userData = useAppStore((state) => state.userData);
+
+  const [languages, setLanguages] = useState<Language[]>([]);
+
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        const { data } = await apiGetLanguages();
+        setLanguages(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchLanguages();
+  }, []);
+
+  const currentLanguage = languages.find(
+    (language) => language.id === userData?.currentLanguage
+  )?.language;
 
   return (
     <Tab.Navigator
@@ -51,7 +73,9 @@ export default function HomeNavigator() {
         name={ROUTES.stats}
         component={StatsScreen}
         options={{
+          ...baseScreenOptions,
           tabBarLabel: 'Stats',
+          headerTitle: `Stats for ${currentLanguage}`,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name='stats-chart' size={size} color={color} />
           ),
