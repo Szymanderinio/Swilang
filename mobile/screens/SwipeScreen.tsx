@@ -82,6 +82,7 @@ export default function SwipeScreen({ navigation }: Props) {
                 text1={data?.wordText}
                 text2={data?.translatedWord}
                 id={data?.id}
+                knowledgeLevel={data?.knowledgeLevel}
                 setVisibleTranslationsIds={setVisibleTranslationsIds}
               />
             );

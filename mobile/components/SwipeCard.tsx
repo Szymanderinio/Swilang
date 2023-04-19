@@ -8,15 +8,31 @@ type Props = {
   text1: string;
   text2: string;
   id: number;
+  knowledgeLevel: 1 | 2 | 3;
   setVisibleTranslationsIds: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-const SwipeCard = ({ text1, text2, id, setVisibleTranslationsIds }: Props) => {
+const SwipeCard = ({
+  text1,
+  text2,
+  id,
+  knowledgeLevel,
+  setVisibleTranslationsIds,
+}: Props) => {
   const [showTranslation, setShowTranslation] = useState(false);
 
   useEffect(() => {
     setShowTranslation(false);
   }, [text1, text2]);
+
+  let borderColor = '#E8E8E8';
+  if (knowledgeLevel === 1) {
+    borderColor = Colors.bronzeColor;
+  } else if (knowledgeLevel === 2) {
+    borderColor = Colors.silverColor;
+  } else if (knowledgeLevel === 3) {
+    borderColor = Colors.goldColor;
+  }
 
   return (
     <TouchableWithoutFeedback
@@ -25,7 +41,14 @@ const SwipeCard = ({ text1, text2, id, setVisibleTranslationsIds }: Props) => {
         setVisibleTranslationsIds((prev) => [...prev, id]);
       }}
     >
-      <View style={styles.card}>
+      <View
+        style={[
+          styles.card,
+          {
+            borderColor,
+          },
+        ]}
+      >
         <View style={styles.insideCard}>
           <View style={styles.idContainer}>
             <Text style={styles.id}>{id}</Text>
@@ -87,8 +110,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#E8E8E8',
+    borderWidth: 3,
     justifyContent: 'center',
     backgroundColor: 'white',
   },
