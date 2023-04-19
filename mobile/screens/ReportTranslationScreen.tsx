@@ -33,6 +33,7 @@ export default function ReportTranslationScreen({ navigation }: Props) {
   const [reportType, setReportType] = useState<
     typeof ReportType[keyof typeof ReportType] | null
   >(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   if (!reportingTranslation) {
     navigation.navigate(ROUTES.swipe);
@@ -50,6 +51,7 @@ export default function ReportTranslationScreen({ navigation }: Props) {
     if (reportType === null) return;
 
     try {
+      setIsSaving(true);
       await apiSendReportTranslations({
         reportType,
         translationID: reportingTranslation.id,
@@ -58,6 +60,8 @@ export default function ReportTranslationScreen({ navigation }: Props) {
       navigation.goBack();
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -111,6 +115,8 @@ export default function ReportTranslationScreen({ navigation }: Props) {
               type={ButtonType.report}
               style={styles.button}
               onPress={reportTranslation}
+              disabled={isSaving}
+              isLoading={isSaving}
             />
           </View>
         </View>

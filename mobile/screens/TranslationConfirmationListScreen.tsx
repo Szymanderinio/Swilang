@@ -11,7 +11,11 @@ import {
 import { useIsFocused } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RectButton, Swipeable } from 'react-native-gesture-handler';
+import {
+  GestureHandlerRootView,
+  RectButton,
+  Swipeable,
+} from 'react-native-gesture-handler';
 
 import { NotConfirmedTranslation } from '../types/translations';
 import { Colors } from '../constants/colors';
@@ -123,24 +127,26 @@ const TranslationConfirmationItemList = ({
   );
 
   return (
-    <Swipeable
-      renderRightActions={renderRightActions}
-      friction={2}
-      enableTrackpadTwoFingerGesture
-      leftThreshold={30}
-      rightThreshold={40}
-    >
-      <Pressable onPress={onPress}>
-        <View style={styles.translationConfirmationItem}>
-          <Text style={styles.translationConfirmationItemTitle}>
-            {word} - {translation}
-          </Text>
-          <Text style={styles.translationConfirmationItemLanguage}>
-            {language}
-          </Text>
-        </View>
-      </Pressable>
-    </Swipeable>
+    <GestureHandlerRootView>
+      <Swipeable
+        renderRightActions={renderRightActions}
+        friction={2}
+        enableTrackpadTwoFingerGesture
+        leftThreshold={30}
+        rightThreshold={40}
+      >
+        <Pressable onPress={onPress}>
+          <View style={styles.translationConfirmationItem}>
+            <Text style={styles.translationConfirmationItemTitle}>
+              {word} - {translation}
+            </Text>
+            <Text style={styles.translationConfirmationItemLanguage}>
+              {language}
+            </Text>
+          </View>
+        </Pressable>
+      </Swipeable>
+    </GestureHandlerRootView>
   );
 };
 

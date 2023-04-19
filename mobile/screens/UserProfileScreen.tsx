@@ -1,11 +1,10 @@
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import BasicButton, { ButtonType } from '../components/BasicButton';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
-import { Colors } from '../constants/colors';
 import BasicTextInput from '../components/BasicTextInput';
 import {
   ApiUpdateUserRequest,
@@ -35,6 +34,7 @@ export default function UserProfileScreen({ navigation }: Props) {
     mainLanguage
   );
   const [openLanguageDropdown, setOpenLanguageDropdown] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const getLanguages = async () => {
@@ -62,6 +62,7 @@ export default function UserProfileScreen({ navigation }: Props) {
 
   const saveUserProfile = async () => {
     try {
+      setIsSaving(true);
       const selectedLanguageId = languages.find(
         (language) => language.languageShort === selectedLanguage
       )?.id;
@@ -80,6 +81,8 @@ export default function UserProfileScreen({ navigation }: Props) {
       navigation.goBack();
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -131,6 +134,8 @@ export default function UserProfileScreen({ navigation }: Props) {
             title='Save'
             style={styles.button}
             onPress={saveUserProfile}
+            disabled={isSaving}
+            isLoading={isSaving}
           />
         </View>
       </View>
