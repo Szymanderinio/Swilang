@@ -3,6 +3,7 @@ export type Translation = {
   wordText: string;
   translatedWord: string;
   languageText: string;
+  knowledgeLevel: 1 | 2 | 3;
 };
 
 export type TranslationFull = {

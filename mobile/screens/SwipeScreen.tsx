@@ -14,6 +14,7 @@ import { ROUTES } from '../types/routes';
 import { TranslationAction } from '../types/swipes';
 import { Translation } from '../types/translations';
 import { RootStackParamList } from '../navigators/RootNavigator';
+import { prepareTranslations } from '../utils/swipes';
 
 type Props = NativeStackScreenProps<RootStackParamList, typeof ROUTES.swipe>;
 
@@ -31,21 +32,22 @@ export default function SwipeScreen({ navigation }: Props) {
   const [currentSwipeIndex, setCurrentSwipeIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchTranslations = async () => {
-      try {
-        setIsLoading(true);
-        const payload = mainLanguage ? { language: mainLanguage } : {};
-        const response = await apiGetTranslations(payload);
-        setSwipes(response.data);
-        setCurrentSwipeIndex(0);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchTranslations = async () => {
+    try {
+      setIsLoading(true);
+      const payload = mainLanguage ? { language: mainLanguage } : {};
+      const response = await apiGetTranslations(payload);
 
+      setSwipes(prepareTranslations(response.data));
+      setCurrentSwipeIndex(0);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchTranslations();
   }, [isFocused]);
 
@@ -93,7 +95,6 @@ export default function SwipeScreen({ navigation }: Props) {
           onSwiped={(cardIndex) => {
             setCurrentSwipeIndex((cardIndex + 1) % swipes.length);
           }}
-          infinite
           cardIndex={currentSwipeIndex}
           backgroundColor={'white'}
           showSecondCard
@@ -106,6 +107,8 @@ export default function SwipeScreen({ navigation }: Props) {
           disableLeftSwipe={
             !visibleTranslationIds.includes(swipes[currentSwipeIndex]?.id)
           }
+          animateCardOpacity
+          onSwipedAll={fetchTranslations}
         />
       ) : null}
       {isLoading ? (
