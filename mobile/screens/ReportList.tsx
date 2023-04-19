@@ -11,7 +11,6 @@ import React, { useEffect } from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native';
 
-import BasicButton, { ButtonType } from '../components/BasicButton';
 import { ROUTES } from '../types/routes';
 import { Colors } from '../constants/colors';
 import { apiGetReports } from '../api/api';

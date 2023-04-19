@@ -6,15 +6,20 @@ import {
   Pressable,
   Text,
   View,
+  Animated,
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RectButton, Swipeable } from 'react-native-gesture-handler';
 
 import { NotConfirmedTranslation } from '../types/translations';
 import { Colors } from '../constants/colors';
-import { apiGetNotConfirmedTranslations } from '../api/api';
-import BasicButton, { ButtonType } from '../components/BasicButton';
+import {
+  apiDeleteTranslation,
+  apiGetNotConfirmedTranslations,
+  apiPatchTranslation,
+} from '../api/api';
 import { useAppStore } from '../stores/useAppStore';
 import { ROUTES } from '../types/routes';
 import { RootStackParamList } from '../navigators/RootNavigator';
@@ -24,6 +29,8 @@ type ItemProps = {
   translation: string;
   language: string;
   onPress?: ((event: GestureResponderEvent) => void) | null | undefined;
+  id: number;
+  removeFromList: () => void;
 };
 
 const TranslationConfirmationItemList = ({
@@ -31,16 +38,111 @@ const TranslationConfirmationItemList = ({
   language,
   translation,
   onPress,
-}: ItemProps) => (
-  <Pressable onPress={onPress}>
-    <View style={styles.translationConfirmationItem}>
-      <Text style={styles.translationConfirmationItemTitle}>
-        {word} - {translation}
-      </Text>
-      <Text style={styles.translationConfirmationItemLanguage}>{language}</Text>
+  id,
+  removeFromList,
+}: ItemProps) => {
+  const renderRightAction = (
+    text: string,
+    color: string,
+    x: number,
+    progress: Animated.AnimatedInterpolation<number>,
+    onPress: () => void
+  ) => {
+    const trans = progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [x, 0],
+    });
+
+    return (
+      <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
+        <RectButton
+          style={[styles.rightAction, { backgroundColor: color }]}
+          onPress={onPress}
+        >
+          <Text style={styles.actionText}>{text}</Text>
+        </RectButton>
+      </Animated.View>
+    );
+  };
+
+  const handleAcceptTranslation = async () => {
+    try {
+      const response = await apiPatchTranslation({
+        translationData: {
+          isConfirmed: true,
+        },
+        translationID: id,
+      });
+
+      if (response.status === 200) {
+        removeFromList();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteTranslation = async () => {
+    try {
+      const response = await apiDeleteTranslation({
+        translationID: id,
+      });
+
+      if (response.status === 204) {
+        removeFromList();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const renderRightActions = (
+    progress: Animated.AnimatedInterpolation<number>
+  ) => (
+    <View
+      style={{
+        width: 160,
+        flexDirection: 'row',
+      }}
+    >
+      {renderRightAction(
+        'Accept',
+        Colors.positiveColor,
+        160,
+        progress,
+        handleAcceptTranslation
+      )}
+      {renderRightAction(
+        'Remove',
+        Colors.negativeColor,
+        80,
+        progress,
+        handleDeleteTranslation
+      )}
     </View>
-  </Pressable>
-);
+  );
+
+  return (
+    <Swipeable
+      renderRightActions={renderRightActions}
+      friction={2}
+      enableTrackpadTwoFingerGesture
+      leftThreshold={30}
+      rightThreshold={40}
+    >
+      <Pressable onPress={onPress}>
+        <View style={styles.translationConfirmationItem}>
+          <Text style={styles.translationConfirmationItemTitle}>
+            {word} - {translation}
+          </Text>
+          <Text style={styles.translationConfirmationItemLanguage}>
+            {language}
+          </Text>
+        </View>
+      </Pressable>
+    </Swipeable>
+  );
+};
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -100,7 +202,13 @@ export default function TranslationConfirmationListScreen({
                 word={item.wordText}
                 translation={item.translatedWord}
                 language={item.languageText}
+                id={item.id}
                 onPress={() => handleTranslationPress(item.id)}
+                removeFromList={() =>
+                  setTranslations((state) =>
+                    (state || []).filter((t) => t.id !== item.id)
+                  )
+                }
               />
             )}
             keyExtractor={(item) => item.id.toString()}
@@ -136,5 +244,18 @@ const styles = StyleSheet.create({
   translationConfirmationItemLanguage: {
     fontSize: 15,
     fontWeight: '600',
+  },
+  actionText: {
+    color: Colors.secondaryTextColor,
+    fontSize: 14,
+    backgroundColor: 'transparent',
+    padding: 10,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  rightAction: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
 });

@@ -1,5 +1,5 @@
-import { cloneElement, useEffect } from 'react';
-import { FlatList, View } from 'react-native';
+import { useEffect } from 'react';
+import { View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 import PieChart from '../components/PieChart';
@@ -95,9 +95,7 @@ export default function StatsScreen() {
 
   const charts = [
     {
-      component: (
-        <PieChart data={swipesData} accessor='count' title='Swipes' absolute />
-      ),
+      component: <PieChart data={swipesData} accessor='count' title='Swipes' />,
       id: 'swipes',
     },
     {
@@ -106,6 +104,7 @@ export default function StatsScreen() {
           data={translationsKnowledgeData}
           accessor='count'
           title='Words Knowledge'
+          absolute
         />
       ),
       id: 'translationsKnowledge',
@@ -116,6 +115,7 @@ export default function StatsScreen() {
           data={translationsContributionsData}
           accessor='count'
           title='Contribution'
+          absolute
         />
       ),
       id: 'translationsContributions',
