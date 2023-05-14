@@ -23,16 +23,15 @@ def translate(word, target_lang):
         source_lang="EN",
         target_lang=str(target_lang.upper()),
         formality='prefer_more',
-        tag_handling='html',
     ).text
 
     return translated_word
 
 
 def get_knowledge_level(translation, user):
-    actions = Action.objects.filter(user=user)
-    swipe_right = actions.filter(action_type=Action.SWIPE_RIGHT, translation=translation).count()
-    swipe_left = actions.filter(action_type=Action.SWIPE_LEFT, translation=translation).count()
+    actions = Action.objects.filter(user=user, translation=translation)
+    swipe_right = actions.filter(action_type=Action.SWIPE_RIGHT).count()
+    swipe_left = actions.filter(action_type=Action.SWIPE_LEFT).count()
 
     if swipe_right + swipe_left == 0:
         # no actions yet
